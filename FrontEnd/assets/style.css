@@ -110,7 +110,7 @@ nav a {
 	color: black;
 }
 nav img {
-	width: 50%;
+	width: 40%;
 }
 a:hover {
 	color: var(--secondary-color);
