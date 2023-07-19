@@ -36,7 +36,7 @@ const getCategories = () => {
                 return responseWorks.json();
               })
 
-              // cette fonction affiche les Works selon la valeur de i (selon le clic ci-dessus)
+              // affiche de base tous les works
               .then(function (dataWorks) {
                 for (productWorks in dataWorks)
                     containerWorks.innerHTML += `
@@ -52,13 +52,25 @@ const getCategories = () => {
 
         // fonction renvoyant l'id de la catégorie au moment du clic sur le bouton
         function addButtonClickListeners() {
-            for (let i = 0; i < 4; i++) {
 
-              // ici on définit "button" en allant récupérer l'id buttonCategories0, buttonCategories1, buttonCategories2 ou buttonCategories3
+            // définit la variable previousButton afin de supprimer la classe de l'ancien bouton à chaque clic
+            let previousButton = null;
+
+            // parcourt les 4 id des button buttonCategories0, buttonCategories1, buttonCategories2 ou buttonCategories3
+            for (let i = 0; i < 4; i++) {
               let button = document.getElementById("buttonCategories" + i);
 
               // ci-dessous toutes les fonctions déclenchées par le clic sur le button
               button.addEventListener("click", () => {
+
+                // s'il y a un previousButton, retrait de la classe
+                if (previousButton !== null) {
+                    previousButton.classList.remove("clicked-button");
+                }
+                // previousButton se re-remplit avec le nouveau button (jusau'au clic suivant)
+                previousButton=button;
+
+                button.classList.add("clicked-button");
 
                 // on vide la page à chaque clic
                 containerWorks.innerHTML = ``
@@ -105,6 +117,3 @@ const getCategories = () => {
 }
 
 getCategories();
-
-
-// manque la modif du CSS

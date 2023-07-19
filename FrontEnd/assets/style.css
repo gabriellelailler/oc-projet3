@@ -214,4 +214,9 @@ button:hover {
 	cursor: pointer;
 }
 
+.clicked-button {
+	color: #FFFEF8;
+	background-color: #1D6154;
+}
+
 
