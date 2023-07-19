@@ -108,6 +108,7 @@ nav a {
 	padding: 0 10px;
 	font-size: 1.2em;
 	color: black;
+	font-weight: 400;
 }
 nav img {
 	width: 40%;
@@ -115,11 +116,6 @@ nav img {
 a:hover {
 	color: var(--secondary-color);
 }
-
-nav a {
-	font-weight: 400;
-}
-
 nav .active a {
 	font-weight: bold;
 	font-weight: 600;
@@ -181,9 +177,13 @@ nav .active a {
 #login h2{
 	margin-bottom: 20px;
 }
-#login p:hover{
+.click:hover{
 	text-decoration: underline;
 	cursor: pointer;
+}
+#error-message{
+	color: red;
+	padding-bottom: 20px;
 }
 #contact form,
 #login form {

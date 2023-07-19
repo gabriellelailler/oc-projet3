@@ -119,3 +119,33 @@ const getCategories = () => {
 
 getCategories();
 
+
+const loginTab = document.getElementById('login-tab');
+const logoutTab = document.getElementById('logout-tab');
+
+// vérification que l'utilisateur est bien connecté
+window.addEventListener('DOMContentLoaded', function() {
+  const authToken = sessionStorage.getItem('authToken');
+  if (authToken) {
+      // L'utilisateur est connecté, effectuez les actions appropriées
+      console.log('Utilisateur connecté');
+      loginTab.style.display = 'none';
+      logoutTab.style.display = 'block';
+  } else {
+      // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+      loginTab.style.display = 'block';
+      logoutTab.style.display = 'none';
+  }
+});
+
+// lors du click sur l'onglet logout, deconnexion
+logoutTab.addEventListener("click", () => {
+  clearSessionStorage();
+});
+
+
+// fonction à appeler lors de la déconnexion
+function clearSessionStorage() {
+  sessionStorage.clear();
+  window.location.href = "index.html"
+}
