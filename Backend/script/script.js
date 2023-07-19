@@ -38,6 +38,7 @@ const getCategories = () => {
 
               // affiche de base tous les works
               .then(function (dataWorks) {
+                console.log(dataWorks);
                 for (productWorks in dataWorks)
                     containerWorks.innerHTML += `
                     <figure>
@@ -117,3 +118,4 @@ const getCategories = () => {
 }
 
 getCategories();
+

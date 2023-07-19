@@ -3,9 +3,18 @@
    License: none (public domain)
 */
 
-* {
-	background-color: #FFFEF8;
+:root {
+	--main-color: #1D6154;
+	--secondary-color: #B1663C;
+	--main-bg-color: #FFFEF8;
+	--dark-gray: #3D3D3D;
 }
+
+* {
+	background-color: var(--main-bg-color);
+	color: var(--dark-gray);
+}
+
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -26,6 +35,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+	text-decoration: none;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
@@ -72,11 +82,12 @@ h1{
 	font-family: 'Syne';
 	font-size: 22px;
 	font-weight: 800;
-	color: #B1663C
+	color: var(--secondary-color);
 }
 
 h1 > span {
 	font-family: 'Work Sans';
+	font-weight: 400;
 	font-size:10px;
 	letter-spacing: 0.1em;
 ;
@@ -86,22 +97,34 @@ h2{
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: var(--main-color);
 }
 nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
 }
-nav li {
+nav a {
 	padding: 0 10px;
 	font-size: 1.2em;
+	color: black;
+}
+nav img {
+	width: 50%;
+}
+a:hover {
+	color: var(--secondary-color);
 }
 
-li:hover {
-	color: #B1663C;
+nav a {
+	font-weight: 400;
 }
+
+nav .active a {
+	font-weight: bold;
+	font-weight: 600;
+  }
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -141,34 +164,48 @@ li:hover {
 	width: 100%;
 
 }
-#contact {
+#contact, 
+#login {
 	width: 50%;
-margin: auto;
+	margin: auto;
+} 
+#login {
+	margin-top: 8%;
+	margin-bottom: 50%; 
 }
-#contact > * {
+#contact > *, 
+#login > * {
 	text-align: center;
-
 }
-#contact h2{
+#contact h2,
+#login h2{
 	margin-bottom: 20px;
 }
-#contact form {
+#login p:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+#contact form,
+#login form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input {
+#contact input,
+#login input {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label {
+#contact label,
+#login label {
 	margin: 2em 0 1em 0;
 }
-#contact textarea {
+#contact textarea,
+#login textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
@@ -177,7 +214,7 @@ input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
-	background-color: #1D6154;
+	background-color: var(--main-color);
 	margin : 2em auto ;
 	width: 180px;
 	text-align: center;
@@ -187,7 +224,8 @@ input[type="submit"]{
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
+	font-weight: 300;
 }
 
 #categories {
@@ -199,24 +237,24 @@ footer nav ul {
 button {
 	font-family: 'Syne';
 	font-weight: 700;
-	color: #1D6154;
-	border: solid 1px #1D6154;
+	color: var(--main-color);
+	border: solid 1px var(--main-color);
 	padding: 9px 21px 9px 21px;
 	width: auto;
 	text-align: center;
 	border-radius: 60px;
-	background-color: #FFFEF8;
+	background-color: var(--main-bg-color);
 }
 
 button:hover {
-	color: #FFFEF8;
-	background-color: #1D6154;
+	color: var(--main-bg-color);
+	background-color: var(--main-color);
 	cursor: pointer;
 }
 
 .clicked-button {
-	color: #FFFEF8;
-	background-color: #1D6154;
+	color: var(--main-bg-color);
+	background-color: var(--main-color);
 }
 
 
