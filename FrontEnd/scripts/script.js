@@ -122,7 +122,8 @@ getCategories();
 
 const loginTab = document.getElementById('login-tab');
 const logoutTab = document.getElementById('logout-tab');
-const editBar = document.getElementById('edit-bar');
+const editBar = document.getElementById("edit-bar");
+const editButton2 = document.getElementById("edit-button-2");
 
 // vérification que l'utilisateur est bien connecté
 window.addEventListener('DOMContentLoaded', function() {
@@ -136,6 +137,8 @@ window.addEventListener('DOMContentLoaded', function() {
       logoutTab.style.display = null;
       // apparition de l'edit-bar
       editBar.style.display = null;
+      // apparition du 2e bouton d'édition
+      editButton2.style.display = null;
 
   } else {
       // L'utilisateur n'est pas connecté
@@ -145,7 +148,7 @@ window.addEventListener('DOMContentLoaded', function() {
       // disparition de l'onglet logout
       logoutTab.style.display = 'none';
       // disparition de l'edit-bar
-      editBar.style.display = 'none';
+      editSection.style.display = 'none';
   }
 });
 
@@ -170,16 +173,25 @@ function openModal() {
 
 
 // ouverture de la modale
-const editButton = document.getElementById("edit-button")
+const editButton1 = document.getElementById("edit-button-1")
 const modalXmark = document.getElementById("modal-xmark")
 
-editButton.addEventListener("click", () => {
+editButton1.addEventListener("click", () => {
   const modal = document.getElementById("modal")
   modal.style.display = null
   modal.removeAttribute('aria-hidden')
   modal.setAttribute('aria-modal', 'true')
-  editButton.removeEventListener("click", ()=> {})
+  editButton1.removeEventListener("click", ()=> {})
 })
+
+editButton2.addEventListener("click", () => {
+  const modal = document.getElementById("modal")
+  modal.style.display = null
+  modal.removeAttribute('aria-hidden')
+  modal.setAttribute('aria-modal', 'true')
+  editButton2.removeEventListener("click", ()=> {})
+})
+
 
 modalXmark.addEventListener("click", () => {
   const modal = document.getElementById("modal")
@@ -188,3 +200,33 @@ modalXmark.addEventListener("click", () => {
   modal.setAttribute('aria-hidden', 'true')
   modalXmark.removeEventListener("click", ()=> {})
 })
+
+// affichage des images dans la modale
+const containerWorksModal = document.getElementById("modal-gallery")
+
+const getWorksModal = () => {
+  fetch("http://localhost:5678/api/works")
+
+      // renvoie tous les Works depuis la db api/categories
+    .then(function (responseWorks) {
+      return responseWorks.json();
+    })
+
+    // affiche de base tous les works
+    .then(function (dataWorks) {
+      console.log(dataWorks);
+      for (productWorks in dataWorks)
+          containerWorksModal.innerHTML += `
+          <figure>
+            <div class="modal-figure-container">
+              <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
+              <i class="fa-solid fa-trash-can"></i>
+              <figcaption>éditer</figcaption>
+            <div>
+          </figure>
+          `;
+    });
+  };
+
+getWorksModal();
+

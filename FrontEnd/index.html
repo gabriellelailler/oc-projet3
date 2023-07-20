@@ -15,7 +15,7 @@
 </head>
 <body>
 <div id="edit-bar" style="display: none">
-	<button id="edit-button">
+	<button id="edit-button-1">
 		<i class="fa-regular fa-pen-to-square"></i>
 		<a href="#modal">Mode édition</a>
 	</button>
@@ -27,7 +27,8 @@
 	<div class="modal-wrapper">
 		<i id="modal-xmark" class="fa-solid fa-xmark"></i>
 		<h2 class="modal-title">Galerie photo</h2>
-		<div></div>
+		<div id="modal-gallery">
+		</div>
 		<hr>
 		<div class="add-delete-buttons">
 			<button id="add-work">Ajouter une photo</button>
@@ -60,7 +61,13 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<div class="projects-title">
+			<h2>Mes Projets</h2>
+			<div id="edit-button-2" class="edit-button" style="display: none">
+				<i class="fa-regular fa-pen-to-square"></i>
+				<p>modifier</p>
+			</div>
+		</div>
 		<div id="categories">
 		</div>
 		<div class="gallery" id="gallery">
