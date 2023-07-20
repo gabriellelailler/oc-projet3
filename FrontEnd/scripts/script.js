@@ -122,19 +122,30 @@ getCategories();
 
 const loginTab = document.getElementById('login-tab');
 const logoutTab = document.getElementById('logout-tab');
+const editBar = document.getElementById('edit-bar');
 
 // vérification que l'utilisateur est bien connecté
 window.addEventListener('DOMContentLoaded', function() {
   const authToken = sessionStorage.getItem('authToken');
   if (authToken) {
-      // L'utilisateur est connecté, effectuez les actions appropriées
+      // L'utilisateur est connecté
       console.log('Utilisateur connecté');
+      // disparition de l'onglet login
       loginTab.style.display = 'none';
-      logoutTab.style.display = 'block';
+      // apparition de l'onglet logout
+      logoutTab.style.display = null;
+      // apparition de l'edit-bar
+      editBar.style.display = null;
+
   } else {
-      // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
-      loginTab.style.display = 'block';
+      // L'utilisateur n'est pas connecté
+      console.log('Utilisateur non connecté');
+      // apparition de l'onglet login
+      loginTab.style.display = null;
+      // disparition de l'onglet logout
       logoutTab.style.display = 'none';
+      // disparition de l'edit-bar
+      editBar.style.display = 'none';
   }
 });
 
@@ -149,3 +160,31 @@ function clearSessionStorage() {
   sessionStorage.clear();
   window.location.href = "index.html"
 }
+
+function openModal() {
+  const modal = document.getElementById("modal-1");
+  modal.showModal();
+}
+
+// apparition de l'edit-bar
+
+
+// ouverture de la modale
+const editButton = document.getElementById("edit-button")
+const modalXmark = document.getElementById("modal-xmark")
+
+editButton.addEventListener("click", () => {
+  const modal = document.getElementById("modal")
+  modal.style.display = null
+  modal.removeAttribute('aria-hidden')
+  modal.setAttribute('aria-modal', 'true')
+  editButton.removeEventListener("click", ()=> {})
+})
+
+modalXmark.addEventListener("click", () => {
+  const modal = document.getElementById("modal")
+  modal.style.display = 'none'
+  modal.removeAttribute('aria-modal')
+  modal.setAttribute('aria-hidden', 'true')
+  modalXmark.removeEventListener("click", ()=> {})
+})

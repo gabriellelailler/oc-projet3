@@ -67,6 +67,131 @@ body {
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+/** end reset css**/
+
+/** edit bar & modal **/
+#edit-bar{
+	background-color: black;
+	display: flex;
+	justify-content: center;
+	position: fixed;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+	margin: 0px;
+}
+#edit-bar i {
+	background-color: transparent;
+	color: white;
+
+}
+#edit-button {
+	color: white;
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 400;
+	background-color: transparent;
+	border:none;
+}
+#edit-button a {
+	background-color: transparent;
+	color: white;
+	margin: 0px;
+}
+#edit-button:hover {
+	background-color: transparent;
+	border:none;
+}
+#publish-button {
+	margin: 8px 7px 8px 7px;
+	color: black;
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 400;
+	background-color: white;
+	border:none;
+}
+#publish-button:hover {
+	color: var(--dark-gray);
+	background-color: white;
+	border:none;
+}
+#modal{
+	background: rgba(0, 0, 0, 0.3);
+	position: fixed;
+	display:flex;
+	justify-content: center;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+	height: 100%;
+	margin: 0px;
+}
+
+.modal-wrapper,
+.modal-wrapper h2,
+.modal-wrapper div {
+	background-color: white;
+}
+
+.modal-wrapper{
+	overflow: auto;
+	width: 600px;
+	height: 30%;
+	max-width: calc(100vw - 20px);
+	max-height: calc(490 - 20px);
+	overflow: auto;
+	border-radius: 10px;
+	margin:20%;
+	padding:8%;
+	position: relative;
+}
+#modal i {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	color: black;
+}
+#modal h2{
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 400;
+	color: black;
+	text-align: center;
+}
+hr{
+	width: 82%;
+	height: 0px;
+	border: 1px solid #B3B3B3;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+#add-work, #delete-all {
+	padding-left: 40px;
+	padding-right: 40px;
+	margin-top: 15px;
+	margin-bottom: 0px;
+}
+
+#add-work{
+	background-color: var(--main-color);
+	color: white;
+}
+#add-work:hover{
+	background-color: transparent;
+	color: var(--main-color);
+}
+#delete-all{
+	background-color: transparent;
+	color: red;
+	border: none;
+	font-weight: 400;
+}
+.modal-wrapper .add-delete-buttons{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/** header & content **/
 header {
 	display: flex;
 	justify-content: space-between;
@@ -75,7 +200,6 @@ header {
 section {
 	margin: 50px 0
 }
-
 h1{
 	display: flex;
 	flex-direction: column;
