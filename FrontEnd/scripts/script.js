@@ -1,6 +1,6 @@
 const containerCategories = document.getElementById("categories");
 const containerWorks = document.getElementById("gallery");
-const i = 0;
+let i = 0;
 
 // affichage de tous les Works depuis la db api/categories
 
@@ -16,13 +16,14 @@ const getWorksInitial = () => {
     // affiche de base tous les works
     .then(function (dataWorks) {
       console.log(dataWorks);
-      for (productWorks in dataWorks)
+      for (productWorks in dataWorks) {
           containerWorks.innerHTML += `
           <figure>
           <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
           <figcaption>${dataWorks[productWorks].title}</figcaption>
           </figure>
           `;
+        }
     });
 };
 
@@ -48,12 +49,10 @@ const getCategories = () => {
         <div>
         <button id="buttonCategories${dataCategories[productCategories].id}">${dataCategories[productCategories].name}</button>
         </div>
-          `;
+        `;
 
-      
         getWorksInitial();
         
-
         // fonction renvoyant l'id de la catégorie au moment du clic sur le bouton
         function addButtonClickListeners() {
 
@@ -97,7 +96,7 @@ const getCategories = () => {
                             <figcaption>${dataWorks[productWorks].title}</figcaption>
                             </figure>
                             `;
-                          } 
+                        } 
                         else if (dataWorks[productWorks].categoryId === i) {
                         containerWorks.innerHTML += `
                           <figure>
@@ -112,9 +111,9 @@ const getCategories = () => {
  
               });
             }
-          }
-          
-          addButtonClickListeners();
+        }
+
+      addButtonClickListeners();
         
     })
 
@@ -127,7 +126,8 @@ const loginTab = document.getElementById('login-tab');
 const logoutTab = document.getElementById('logout-tab');
 const editBar = document.getElementById("edit-bar");
 const editButton2 = document.getElementById("edit-button-2");
-let authToken = sessionStorage.getItem('authToken');
+let authToken = sessionStorage.getItem("authToken");
+console.log(authToken)
 
 // vérification que l'utilisateur est bien connecté
 window.addEventListener('DOMContentLoaded', function() {
@@ -151,7 +151,7 @@ window.addEventListener('DOMContentLoaded', function() {
       // disparition de l'onglet logout
       logoutTab.style.display = 'none';
       // disparition de l'edit-bar
-      editSection.style.display = 'none';
+      editBar.style.display = 'none';
   }
 });
 
@@ -186,14 +186,14 @@ editButton1.addEventListener("click", () => {
   modal.removeAttribute('aria-hidden')
   modal.setAttribute('aria-modal', 'true')
   editButton1.removeEventListener("click", ()=> {})
-})
+});
 
 editButton2.addEventListener("click", () => {
   modal.style.display = null
   modal.removeAttribute('aria-hidden')
   modal.setAttribute('aria-modal', 'true')
   editButton2.removeEventListener("click", ()=> {})
-})
+});
 
 // Ouverture de la modale d'ajout de photo
 const addWork = document.getElementById("add-work")
@@ -209,7 +209,7 @@ addWork.addEventListener("click", () => {
 
   addWork.removeEventListener("click", ()=> {})
 
-})
+});
 
 // fermeture de la modale principale quand on clique sur la croix
 modalXmark.addEventListener("click", () => {
@@ -217,7 +217,7 @@ modalXmark.addEventListener("click", () => {
   modal.removeAttribute('aria-modal')
   modal.setAttribute('aria-hidden', 'true')
   modalXmark.removeEventListener("click", ()=> {})
-})
+});
 
 // fermeture de la modale d'ajout de photos quand on clique sur la croix
 modalAddWorkXmark.addEventListener("click", () => {
@@ -225,7 +225,7 @@ modalAddWorkXmark.addEventListener("click", () => {
   modalAddWork.removeAttribute('aria-modal')
   modalAddWork.setAttribute('aria-hidden', 'true')
   modalAddWorkXmark.removeEventListener("click", ()=> {})
-})
+});
 
 
 // fermeture des modales quand on clique en dehors
@@ -252,7 +252,7 @@ modalAddWorkArrowLeft.addEventListener("click", () => {
   modal.removeAttribute('aria-hidden')
   modal.setAttribute('aria-modal', 'true')
   modalAddWorkArrowLeft.removeEventListener("click", ()=> {})
-})
+});
 
 // affichage des images dans la modale
 const containerWorksModal = document.getElementById("modal-gallery")
@@ -268,7 +268,7 @@ const getWorksModal = () => {
     // affiche de base tous les works
     .then(function (dataWorks) {
       console.log(dataWorks);
-      for (productWorks in dataWorks)
+      for (productWorks in dataWorks) {
           containerWorksModal.innerHTML += `
           <figure>
             <div class="modal-figure-container">
@@ -278,8 +278,9 @@ const getWorksModal = () => {
             <div>
           </figure>
           `;
+      }
     });
-  };
+};
 
 getWorksModal();
 
@@ -374,22 +375,22 @@ function handleFileSelect(event) {
     else {
       addPictureError.innerHTML = '';
 
-    // Création d'un objet FileReader (pour lire le fichier)
-    const reader = new FileReader();
+      // Création d'un objet FileReader (pour lire le fichier)
+      const reader = new FileReader();
 
-    // Définition la fonction de gestion de l'événement onload 
-    // Fonction exécutée en réponse à l'évènement 'onload' du FileReader
-    reader.onload = function (e) {
-      // Mise à jour la source de l'image prévisualisée avec les données de l'image chargée
-      previewImage.src = e.target.result;
-      previewImage.style.display = null;
+      // Définition la fonction de gestion de l'événement onload 
+      // Fonction exécutée en réponse à l'évènement 'onload' du FileReader
+      reader.onload = function (e) {
+        // Mise à jour la source de l'image prévisualisée avec les données de l'image chargée
+        previewImage.src = e.target.result;
+        previewImage.style.display = null;
 
-      // Mise à jour de l'affichage (retrait de l'icône etc.)
-      iconImage.style.display = 'none';
-      addPictureButton.innerHTML = `Changer de photo`;
-    };
-    // Lire le contenu de l'image comme une URL de données
-    reader.readAsDataURL(file);
+        // Mise à jour de l'affichage (retrait de l'icône etc.)
+        iconImage.style.display = 'none';
+        addPictureButton.innerHTML = `Changer de photo`;
+      };
+      // Lire le contenu de l'image comme une URL de données
+      reader.readAsDataURL(file);
     }
   }
 }
@@ -413,61 +414,58 @@ form.addEventListener("submit", async (event) => {
   const selectedOptionId = selectElement.options[selectedIndex].id;
   // Extraire le chiffre de l'attribut id
   const chiffre = selectedOptionId.split('-')[1];
-  // Convertir le chiffre en nombre (integer)
+  // Conversion du chiffre en nombre (integer)
   const category = parseInt(chiffre, 10);
+
+   // Conversion de l'image en base64
+  const imageBase64 = await imageToBase64(addPictureInput.files[0]);
 
   console.log("categorie est ",category)
   // la constante addPictureInput existe déjà
 
   // Vérification si l'image a été sélectionnée
-  if (!addPictureInput.files[0]) {
+  if (!imageBase64) {
     // affichage d'un message d'erreur
     errorMessage.style.display = "block";
     // return arrête la fonction ici s'il n'y a pas de fichier, sinon elle continue
     return;
   }
 
-  // Conversion de l'image en base64
-  const imageBase64 = await imageToBase64(addPictureInput.files[0]);
-
-  // Création de l'objet newWork avec les bonnes données
-  let newWork = {
-    image: imageBase64,
-    title,
-    category,
-  };
-
   if (!title || !chiffre) {
     // affichage d'un message d'erreur
-  errorMessage.style.display = "block";
-  return;
-  } 
-  else {
-  // pas de message d'erreur
-  errorMessage.style.display = "none";
-  fetch("http://localhost:5678/api/works", {
-    method: "POST",
-    // ajout du token dans le headers
-    headers: {
-      "Authorization": `Bearer ${authToken}`,
-      "Content-Type": "application/json",
-    }, 
-    // Envoi de l'objet newWork au format JSON
-    body: JSON.stringify(newWork),
-  })
-  // vérification du succès de la requête
-  .then((response) => {
-    if (response.ok) {
-      console.log ("Requête POST réussie !")
+    errorMessage.style.display = "block";
+    return;
+  } else {
+    // pas de message d'erreur
+
+    // Création d'un objet FormData pour envoyer les données en multipart/form-data
+    const formData = new FormData();
+    formData.append("image",imageBase64);
+    formData.append("title", title);
+    formData.append("category", category);
+
+    errorMessage.style.display = "none";
+
+    try{
+      const response = await
+      fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      // ajout du token dans le headers
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: formData,
+      });
+      if (response.ok) {
+        console.log("POST réussi");
+      } else {
+        console.log("POST échoué");
+      }
     }
-    else {
-      console.log ("La requête POST a échoué")
+    catch (error) {
+      console.error("Erreur lors de la requête POST : ",error)
     }
-  })
-  .catch((error) => {
-    console.error ("Erreur lors de la requête POST : ", error)
-  });
-}
+  }
 })
 
 // Conversion des paramètres pour l'ajout d'un nouveau zork
