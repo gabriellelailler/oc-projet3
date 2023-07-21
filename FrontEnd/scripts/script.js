@@ -273,9 +273,9 @@ containerWorksModal.addEventListener("click", (event) => {
       if (deletedImageElement) {
         // Supprimer l'élément du DOM - apparaît direct dans la modale
         deletedImageElement.closest("figure").remove();
+        // Suppression sur la page principale
+        updateWorksOnMainPage();
 
-        // mise à jour de la page page derrière
-        getWorksInitial();
       }
       
     })
@@ -284,3 +284,11 @@ containerWorksModal.addEventListener("click", (event) => {
     });
   }
 });
+
+// Mise à jour de la la liste d'images sur la page principale
+function updateWorksOnMainPage() {
+  // On vide la liste actuelle d'images
+  containerWorks.innerHTML = "";
+  // On récupère les images à partir de l'API et on les affiche sur la page principale
+  getWorksInitial(); 
+}
