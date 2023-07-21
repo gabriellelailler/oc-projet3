@@ -5,6 +5,7 @@ const i = 0;
 // affichage de tous les Works depuis la db api/categories
 
 const getWorksInitial = () => {
+  containerWorksModal.innerHTML = "";
   fetch("http://localhost:5678/api/works")
 
       // renvoie tous les Works depuis la db api/categories
@@ -126,10 +127,10 @@ const loginTab = document.getElementById('login-tab');
 const logoutTab = document.getElementById('logout-tab');
 const editBar = document.getElementById("edit-bar");
 const editButton2 = document.getElementById("edit-button-2");
+let authToken = sessionStorage.getItem('authToken');
 
 // vérification que l'utilisateur est bien connecté
 window.addEventListener('DOMContentLoaded', function() {
-  let authToken = sessionStorage.getItem('authToken');
   if (authToken) {
       // L'utilisateur est connecté
       console.log('Utilisateur connecté');
@@ -305,9 +306,9 @@ containerWorksModal.addEventListener("click", (event) => {
       return;
     }
 
-    const url = `http://localhost:5678/api/works/${id}`
+    const urlDelete = `http://localhost:5678/api/works/${id}`
 
-    fetch(url, {
+    fetch(urlDelete, {
       method: "DELETE",
       // ajout du token dans le headers
       headers: {"Authorization": `Bearer ${authToken}`}, 
@@ -393,25 +394,91 @@ function handleFileSelect(event) {
   }
 }
 
-// formulaire incomplet
+// validation du formulaire
 
 const form = document.querySelector("form");
 const formIncomplete = document.getElementById("form-incomplete");
 const errorMessage = document.getElementById("add-work-error-message")
 
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const title = document.getElementById("title").value;
-  const category = document.getElementById("category").value;
-  // la constante addPictureInput existe déjà
-  
-  if (!title || !category || !addPictureInput.files[0]) {
-  errorMessage.style.display = "block";
-  } else {
-  errorMessage.style.display = "none";
-  console.log("Formulaire complet ! Soumission en cours...");
-  // form.submit(); // Uncomment this line to submit the form
-}
+form.addEventListener("submit", async (event) => {
 
+  event.preventDefault();
+
+  const title = document.getElementById("title").value;
+
+  const selectElement = document.getElementById('category');
+  // Récupérer l'index de l'option sélectionnée
+  const selectedIndex = selectElement.selectedIndex;
+  // Récupérer l'attribut id de l'option sélectionnée
+  const selectedOptionId = selectElement.options[selectedIndex].id;
+  // Extraire le chiffre de l'attribut id
+  const chiffre = selectedOptionId.split('-')[1];
+  // Convertir le chiffre en nombre (integer)
+  const category = parseInt(chiffre, 10);
+
+  console.log("categorie est ",category)
+  // la constante addPictureInput existe déjà
+
+  // Vérification si l'image a été sélectionnée
+  if (!addPictureInput.files[0]) {
+    // affichage d'un message d'erreur
+    errorMessage.style.display = "block";
+    // return arrête la fonction ici s'il n'y a pas de fichier, sinon elle continue
+    return;
+  }
+
+  // Conversion de l'image en base64
+  const imageBase64 = await imageToBase64(addPictureInput.files[0]);
+
+  // Création de l'objet newWork avec les bonnes données
+  let newWork = {
+    image: imageBase64,
+    title,
+    category,
+  };
+
+  if (!title || !chiffre) {
+    // affichage d'un message d'erreur
+  errorMessage.style.display = "block";
+  return;
+  } 
+  else {
+  // pas de message d'erreur
+  errorMessage.style.display = "none";
+  fetch("http://localhost:5678/api/works", {
+    method: "POST",
+    // ajout du token dans le headers
+    headers: {
+      "Authorization": `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    }, 
+    // Envoi de l'objet newWork au format JSON
+    body: JSON.stringify(newWork),
+  })
+  // vérification du succès de la requête
+  .then((response) => {
+    if (response.ok) {
+      console.log ("Requête POST réussie !")
+    }
+    else {
+      console.log ("La requête POST a échoué")
+    }
+  })
+  .catch((error) => {
+    console.error ("Erreur lors de la requête POST : ", error)
+  });
+}
 })
+
+// Conversion des paramètres pour l'ajout d'un nouveau zork
+// Fonction pour convertir l'image en base64
+function imageToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result.split(',')[1]); // Supprimez "data:image/jpeg;base64," du résultat
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
