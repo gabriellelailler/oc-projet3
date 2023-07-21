@@ -194,7 +194,7 @@ editButton2.addEventListener("click", () => {
   editButton2.removeEventListener("click", ()=> {})
 })
 
-
+// fermeture de la modale quand on clique sur la croix
 modalXmark.addEventListener("click", () => {
   const modal = document.getElementById("modal")
   modal.style.display = 'none'
@@ -202,6 +202,16 @@ modalXmark.addEventListener("click", () => {
   modal.setAttribute('aria-hidden', 'true')
   modalXmark.removeEventListener("click", ()=> {})
 })
+
+// fermeture de la modale quand on clique en dehors
+window.addEventListener("click", (event) => {
+  if (event.target === modal) {
+  modal.style.display = 'none'
+  modal.removeAttribute('aria-modal')
+  modal.setAttribute('aria-hidden', 'true')
+  modalXmark.removeEventListener("click", ()=> {})
+  }
+});
 
 // affichage des images dans la modale
 const containerWorksModal = document.getElementById("modal-gallery")
@@ -264,8 +274,8 @@ containerWorksModal.addEventListener("click", (event) => {
 
     .then ((response) => {
       if (!response.ok) {
-        throw new Error ("Une erreur s'est produite lors de la suppression de l'image.");
-      }
+        console.error("Une erreur s'est produite lors de la suppression de l'image.");
+      } else {
       console.log("L'image a été supprimée avec succès !");
       
       // On vide la liste actuelle d'images de la modale
@@ -276,11 +286,13 @@ containerWorksModal.addEventListener("click", (event) => {
       // De même avec la page principale
       containerWorks.innerHTML = "";
       getWorksInitial(); 
-
-      
+    } 
     })
     .catch((error) => {
       console.error(error);
     });
   }
 });
+
+
+// Ouverture de la modale d'ajout de photo
