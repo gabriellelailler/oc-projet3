@@ -133,7 +133,8 @@ body {
 #edit-button-2 p{
 	color: black;
 }
-#modal{
+#modal,
+#modal-add-work {
 	background: rgba(0, 0, 0, 0.3);
 	position: fixed;
 	display:flex;
@@ -146,16 +147,23 @@ body {
 }
 
 .modal-wrapper,
+.modal-wrapper-add-work,
 .modal-wrapper h2,
+.modal-wrapper-add-work h2,
 .modal-wrapper div,
+.modal-wrapper-add-work div,
 .modal-image,
 #modal-gallery,
 #modal-gallery figure,
-#modal-gallery figcaption {
+#modal-gallery figcaption,
+#modal-add-work form,
+#modal-add-work form input,
+#modal-add-work form label{
 	background-color: white;
 }
 
-.modal-wrapper{
+.modal-wrapper,
+.modal-wrapper-add-work{
 	overflow: auto;
 	width: 600px;
 	height: 30%;
@@ -167,18 +175,28 @@ body {
 	padding:8%;
 	position: relative;
 }
-#modal-xmark {
+#modal-xmark,
+#modal-add-work-xmark{
 	position: absolute;
 	top: 10px;
 	right: 10px;
 	cursor: pointer;
 	color: black;
 }
-#modal h2{
+#modal-add-work-arrow-left{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	cursor: pointer;
+	color: black;
+}
+#modal h2,
+#modal-add-work h2{
 	font-family: 'Work Sans', sans-serif;
 	font-weight: 400;
 	color: black;
 	text-align: center;
+	margin-bottom:30px;
 }
 #modal-gallery {
 	display: grid;
@@ -225,7 +243,9 @@ hr{
 	margin-top: 25px;
 	margin-bottom: 25px;
 }
-#add-work, #delete-all {
+#add-work, 
+#delete-all,
+#validate {
 	padding-left: 40px;
 	padding-right: 40px;
 	margin-top: 15px;
@@ -235,6 +255,25 @@ hr{
 	background-color: var(--main-color);
 	color: white;
 }
+#validate {
+	background-color: var(--dark-gray);
+	color: white;
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: var(--main-color);
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+}
+#validate:hover{
+	background-color: white;
+	color: var(--dark-gray);
+	border: solid 1px var(--dark-gray);
+	cursor: pointer;
+}
+
 #add-work:hover{
 	background-color: transparent;
 	color: var(--main-color);
@@ -249,6 +288,53 @@ hr{
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+
+/** ajout de photos **/
+#modal-add-work #add-picture-area{
+	background-color: #E8F1F6;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 3px;
+	padding: 15px 0px 15px 0px;
+}
+#modal-add-work #add-picture-area i{
+	color: #B9C5CC;
+	background-color: #E8F1F6;
+	font-size: 48px;
+}
+#modal-add-work #add-picture-area p{
+	color: #444444;
+	font-family: 'Work Sans';
+	background-color: #E8F1F6;
+	font-weight: 400;
+}
+#modal-add-work #add-picture-button{
+	background-color: #CBD6DC;
+	border-radius: 50px;
+	color: #306685;
+	padding: 9px 21px 9px 21px;
+	font-family: 'Work Sans';
+	font-weight: 500;
+}
+#modal-add-work #add-picture-area label:hover{
+	background-color: #CBD6DC;
+	border-radius: 50px;
+	color: #306685;
+	padding: 9px 21px 9px 21px;
+	font-family: 'Work Sans';
+	font-weight: 500;
+}
+
+/** reste du formulaire **/
+#modal-add-work form{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: left;
+	background-color: white;
 }
 
 /** header & content **/
@@ -372,7 +458,8 @@ nav .active a {
 }
 
 #contact input,
-#login input {
+#login input
+#modal-add-work {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;

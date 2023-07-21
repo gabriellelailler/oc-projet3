@@ -167,19 +167,20 @@ function clearSessionStorage() {
 }
 
 function openModal() {
-  const modal = document.getElementById("modal-1");
+  const modal = document.getElementById("modal");
   modal.showModal();
 }
-
-// apparition de l'edit-bar
 
 
 // ouverture de la modale
 const editButton1 = document.getElementById("edit-button-1")
 const modalXmark = document.getElementById("modal-xmark")
+const modalAddWorkXmark = document.getElementById("modal-add-work-xmark")
+const modal = document.getElementById("modal")
+const modalAddWork = document.getElementById("modal-add-work")
+const modalAddWorkArrowLeft = document.getElementById("modal-add-work-arrow-left")
 
 editButton1.addEventListener("click", () => {
-  const modal = document.getElementById("modal")
   modal.style.display = null
   modal.removeAttribute('aria-hidden')
   modal.setAttribute('aria-modal', 'true')
@@ -187,31 +188,70 @@ editButton1.addEventListener("click", () => {
 })
 
 editButton2.addEventListener("click", () => {
-  const modal = document.getElementById("modal")
   modal.style.display = null
   modal.removeAttribute('aria-hidden')
   modal.setAttribute('aria-modal', 'true')
   editButton2.removeEventListener("click", ()=> {})
 })
 
-// fermeture de la modale quand on clique sur la croix
+// Ouverture de la modale d'ajout de photo
+const addWork = document.getElementById("add-work")
+
+addWork.addEventListener("click", () => {
+  modalAddWork.style.display = null
+  modalAddWork.removeAttribute('aria-hidden')
+  modalAddWork.setAttribute('aria-modal', 'true')
+  
+  modal.style.display = 'none'
+  modal.removeAttribute('aria-modal')
+  modal.setAttribute('aria-hidden', 'true')
+
+  addWork.removeEventListener("click", ()=> {})
+
+})
+
+// fermeture de la modale principale quand on clique sur la croix
 modalXmark.addEventListener("click", () => {
-  const modal = document.getElementById("modal")
   modal.style.display = 'none'
   modal.removeAttribute('aria-modal')
   modal.setAttribute('aria-hidden', 'true')
   modalXmark.removeEventListener("click", ()=> {})
 })
 
-// fermeture de la modale quand on clique en dehors
+// fermeture de la modale d'ajout de photos quand on clique sur la croix
+modalAddWorkXmark.addEventListener("click", () => {
+  modalAddWork.style.display = 'none'
+  modalAddWork.removeAttribute('aria-modal')
+  modalAddWork.setAttribute('aria-hidden', 'true')
+  modalAddWorkXmark.removeEventListener("click", ()=> {})
+})
+
+
+// fermeture des modales quand on clique en dehors
 window.addEventListener("click", (event) => {
-  if (event.target === modal) {
+  if (event.target === modal | event.target === modalAddWork) {
   modal.style.display = 'none'
   modal.removeAttribute('aria-modal')
   modal.setAttribute('aria-hidden', 'true')
   modalXmark.removeEventListener("click", ()=> {})
+  modalAddWork.style.display = 'none'
+  modalAddWork.removeAttribute('aria-modal')
+  modalAddWork.setAttribute('aria-hidden', 'true')
+  modalAddWorkXmark.removeEventListener("click", ()=> {})
   }
 });
+
+// retour à la modale principale depuis la modale d'ajout de photos
+modalAddWorkArrowLeft.addEventListener("click", () => {
+  modalAddWork.style.display = 'none'
+  modalAddWork.removeAttribute('aria-modal')
+  modalAddWork.setAttribute('aria-hidden', 'true')
+  modalAddWorkXmark.removeEventListener("click", ()=> {})
+  modal.style.display = null
+  modal.removeAttribute('aria-hidden')
+  modal.setAttribute('aria-modal', 'true')
+  modalAddWorkArrowLeft.removeEventListener("click", ()=> {})
+})
 
 // affichage des images dans la modale
 const containerWorksModal = document.getElementById("modal-gallery")
@@ -241,6 +281,7 @@ const getWorksModal = () => {
   };
 
 getWorksModal();
+
 
 // suppression d'une image depuis la modale
 
@@ -295,4 +336,4 @@ containerWorksModal.addEventListener("click", (event) => {
 });
 
 
-// Ouverture de la modale d'ajout de photo
+
