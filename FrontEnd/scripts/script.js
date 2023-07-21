@@ -2,6 +2,30 @@ const containerCategories = document.getElementById("categories");
 const containerWorks = document.getElementById("gallery");
 const i = 0;
 
+// affichage de tous les Works depuis la db api/categories
+
+const getWorksInitial = () => {
+  fetch("http://localhost:5678/api/works")
+
+      // renvoie tous les Works depuis la db api/categories
+    .then(function (responseWorks) {
+      return responseWorks.json();
+    })
+
+    // affiche de base tous les works
+    .then(function (dataWorks) {
+      console.log(dataWorks);
+      for (productWorks in dataWorks)
+          containerWorks.innerHTML += `
+          <figure>
+          <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
+          <figcaption>${dataWorks[productWorks].title}</figcaption>
+          </figure>
+          `;
+    });
+};
+
+// affichage des catégories
 const getCategories = () => {
     fetch("http://localhost:5678/api/categories")
     .then(function(responseCategories) {
@@ -25,29 +49,7 @@ const getCategories = () => {
         </div>
           `;
 
-        
-        // affichage de tous les Works depuis la db api/categories
-
-        const getWorksInitial = () => {
-            fetch("http://localhost:5678/api/works")
-
-                // renvoie tous les Works depuis la db api/categories
-              .then(function (responseWorks) {
-                return responseWorks.json();
-              })
-
-              // affiche de base tous les works
-              .then(function (dataWorks) {
-                console.log(dataWorks);
-                for (productWorks in dataWorks)
-                    containerWorks.innerHTML += `
-                    <figure>
-                    <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
-                    <figcaption>${dataWorks[productWorks].title}</figcaption>
-                    </figure>
-                    `;
-              });
-          };
+      
         getWorksInitial();
         
 
@@ -127,7 +129,7 @@ const editButton2 = document.getElementById("edit-button-2");
 
 // vérification que l'utilisateur est bien connecté
 window.addEventListener('DOMContentLoaded', function() {
-  const authToken = sessionStorage.getItem('authToken');
+  let authToken = sessionStorage.getItem('authToken');
   if (authToken) {
       // L'utilisateur est connecté
       console.log('Utilisateur connecté');
@@ -220,7 +222,7 @@ const getWorksModal = () => {
           <figure>
             <div class="modal-figure-container">
               <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
-              <i class="fa-solid fa-trash-can"></i>
+              <i class="fa-solid fa-trash-can" id="modal-trash-${dataWorks[productWorks].id}"></i>
               <figcaption>éditer</figcaption>
             <div>
           </figure>
@@ -230,3 +232,55 @@ const getWorksModal = () => {
 
 getWorksModal();
 
+// suppression d'une image depuis la modale
+
+// écoute des click sur la modal
+containerWorksModal.addEventListener("click", (event) => {
+
+  //si le click porte sur une ligne avec icone trash-can 
+  if (event.target.classList.contains("fa-trash-can")) {
+    // récupération de l'id de l'image
+    // event.target -> <i class="fa-solid fa-trash-can" id="modal-trash-2"></i>
+    // event.target.id -> "modal-trash-2"
+    // event.target.id.split("-") splite "modal-trash-2" en tableau -> ["modal" "trash" "2"]
+    // event.target.id.split("-")[2] renvoie le 3e élément du tableau -> 2
+    const id = event.target.id.split("-")[2];
+    console.log("Vous avez cliqué sur l'image d'ID :", id);
+
+    // récupération du token dans le sessionStorage 
+    let authToken = sessionStorage.getItem('authToken');
+    if (!authToken) {
+      console.error("Token d'authentification manquant !");
+      return;
+    }
+
+    const url = `http://localhost:5678/api/works/${id}`
+
+    fetch(url, {
+      method: "DELETE",
+      // ajout du token dans le headers
+      headers: {"Authorization": `Bearer ${authToken}`}, 
+    })
+
+    .then ((response) => {
+      if (!response.ok) {
+        throw new Error ("Une erreur s'est produite lors de la suppression de l'image.");
+      }
+      console.log("L'image a été supprimée avec succès !");
+
+      // retrait direct des images (sans rechargement de la page)
+      const deletedImageElement = document.getElementById(`modal-trash-${id}`);
+      if (deletedImageElement) {
+        // Supprimer l'élément du DOM - apparaît direct dans la modale
+        deletedImageElement.closest("figure").remove();
+
+        // mise à jour de la page page derrière
+        getWorksInitial();
+      }
+      
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+});
