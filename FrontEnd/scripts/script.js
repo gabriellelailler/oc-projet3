@@ -267,16 +267,16 @@ containerWorksModal.addEventListener("click", (event) => {
         throw new Error ("Une erreur s'est produite lors de la suppression de l'image.");
       }
       console.log("L'image a été supprimée avec succès !");
+      
+      // On vide la liste actuelle d'images de la modale
+      containerWorksModal.innerHTML = "";
+      // On récupère les images à partir de l'API et on les affiche sur la modale
+      getWorksModal(); 
 
-      // retrait direct des images (sans rechargement de la page)
-      const deletedImageElement = document.getElementById(`modal-trash-${id}`);
-      if (deletedImageElement) {
-        // Supprimer l'élément du DOM - apparaît direct dans la modale
-        deletedImageElement.closest("figure").remove();
-        // Suppression sur la page principale
-        updateWorksOnMainPage();
+      // De même avec la page principale
+      containerWorks.innerHTML = "";
+      getWorksInitial(); 
 
-      }
       
     })
     .catch((error) => {
@@ -284,11 +284,3 @@ containerWorksModal.addEventListener("click", (event) => {
     });
   }
 });
-
-// Mise à jour de la la liste d'images sur la page principale
-function updateWorksOnMainPage() {
-  // On vide la liste actuelle d'images
-  containerWorks.innerHTML = "";
-  // On récupère les images à partir de l'API et on les affiche sur la page principale
-  getWorksInitial(); 
-}
