@@ -481,4 +481,3 @@ function imageToBase64(file) {
     reader.readAsDataURL(file);
   });
 }
-
