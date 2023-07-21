@@ -161,6 +161,9 @@ body {
 #modal-add-work form label{
 	background-color: white;
 }
+#add-work-error-message > * {
+	background-color: transparent;
+}
 
 .modal-wrapper,
 .modal-wrapper-add-work{
@@ -315,6 +318,7 @@ hr{
 }
 #modal-add-work #add-picture-area p{
 	background-color: #E8F1F6;
+	text-align: center;
 }
 #modal-add-work #add-picture-button{
 	background-color: #CBD6DC;
@@ -461,9 +465,11 @@ nav .active a {
 	text-decoration: underline;
 	cursor: pointer;
 }
-#error-message{
+#error-message,
+#add-work-error-message p{
 	color: red;
 	padding-bottom: 20px;
+	text-align: center;
 }
 #contact form,
 #login form {

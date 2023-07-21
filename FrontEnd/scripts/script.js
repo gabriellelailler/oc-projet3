@@ -358,12 +358,20 @@ function handleFileSelect(event) {
     const maxSizeInBytes = 4 * 1024 * 1024; // 4 Mo en octets
     if (fileSizeInBytes > maxSizeInBytes) {
       // Affichage du message d'erreur
-      addPictureError.innerHTML = "";
-      addPictureError.innerHTML += `<p>La photo sélectionnée dépasse 4 Mo. Veuillez sélectionner un fichier plus petit.</p>`;
+      addPictureError.innerHTML = `<p>La photo sélectionnée dépasse 4 Mo. Sélectionnez un fichier plus petit.</p>`;
+      // Réinitialisation de l'input file pour que l'utilisateur puisse sélectionner un nouveau fichier
+      event.target.value = '';
+      // Réinitialisation de l'image prévisualisée
+      previewImage.src = '';
+      previewImage.style.display = 'none';
+      // Réinitialisation de l'affichage du bouton d'ajout de photo
+      iconImage.style.display = null;
+      addPictureButton.textContent = "Ajouter une photo";
+
     }
     //si l'image ne dépasse pas les 4mo
     else {
-      addPictureError.innerHTML = ``;
+      addPictureError.innerHTML = '';
 
     // Création d'un objet FileReader (pour lire le fichier)
     const reader = new FileReader();
@@ -377,13 +385,33 @@ function handleFileSelect(event) {
 
       // Mise à jour de l'affichage (retrait de l'icône etc.)
       iconImage.style.display = 'none';
-      addPictureButton.innerHTML = "";
-      addPictureButton.innerHTML += `Changer de photo
-      `;
+      addPictureButton.innerHTML = `Changer de photo`;
     };
-    }
-
     // Lire le contenu de l'image comme une URL de données
     reader.readAsDataURL(file);
+    }
   }
 }
+
+// formulaire incomplet
+
+const form = document.querySelector("form");
+const formIncomplete = document.getElementById("form-incomplete");
+const errorMessage = document.getElementById("add-work-error-message")
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const title = document.getElementById("title").value;
+  const category = document.getElementById("category").value;
+  // la constante addPictureInput existe déjà
+  
+  if (!title || !category || !addPictureInput.files[0]) {
+  errorMessage.style.display = "block";
+  } else {
+  errorMessage.style.display = "none";
+  console.log("Formulaire complet ! Soumission en cours...");
+  // form.submit(); // Uncomment this line to submit the form
+}
+
+})
+
