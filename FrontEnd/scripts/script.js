@@ -335,5 +335,55 @@ containerWorksModal.addEventListener("click", (event) => {
   }
 });
 
+// preview de la photo lors de l'upload et vérification de la taille
+const addPictureInput = document.getElementById("add-picture");
+const previewImage = document.getElementById("preview-image");
+const iconImage = document.getElementById("icon-image");
+const addPictureButton = document.getElementById("add-picture-button")
+const addPictureError = document.getElementById("add-picture-error")
 
+// change 
+addPictureInput.addEventListener("change", handleFileSelect);
 
+function handleFileSelect(event) {
+
+  // Récupération du fichier sélectionné par l'utilisateur
+  const file = event.target.files[0];
+
+  // Vérification que l'utilisateur a sélectionné un fichier
+  if (file) {
+
+    // Vérification de la taille du fichier
+    const fileSizeInBytes = file.size;
+    const maxSizeInBytes = 4 * 1024 * 1024; // 4 Mo en octets
+    if (fileSizeInBytes > maxSizeInBytes) {
+      // Affichage du message d'erreur
+      addPictureError.innerHTML = "";
+      addPictureError.innerHTML += `<p>La photo sélectionnée dépasse 4 Mo. Veuillez sélectionner un fichier plus petit.</p>`;
+    }
+    //si l'image ne dépasse pas les 4mo
+    else {
+      addPictureError.innerHTML = ``;
+
+    // Création d'un objet FileReader (pour lire le fichier)
+    const reader = new FileReader();
+
+    // Définition la fonction de gestion de l'événement onload 
+    // Fonction exécutée en réponse à l'évènement 'onload' du FileReader
+    reader.onload = function (e) {
+      // Mise à jour la source de l'image prévisualisée avec les données de l'image chargée
+      previewImage.src = e.target.result;
+      previewImage.style.display = null;
+
+      // Mise à jour de l'affichage (retrait de l'icône etc.)
+      iconImage.style.display = 'none';
+      addPictureButton.innerHTML = "";
+      addPictureButton.innerHTML += `Changer de photo
+      `;
+    };
+    }
+
+    // Lire le contenu de l'image comme une URL de données
+    reader.readAsDataURL(file);
+  }
+}

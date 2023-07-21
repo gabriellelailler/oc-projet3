@@ -43,10 +43,13 @@
 		<h2 class="modal-title">Ajout photo</h2>
 		<form action="#" method="post">
 			<div id="add-picture-area">
-				<i class="fa-sharp fa-regular fa-image"></i>
-				<label for="add-picture" id="add-picture-button">+ Ajouter photo</label>
-				<input type="file" name="add-picture" id="add-picture" style="display:none">
-				<p>jpg, png : 4mo max</p>
+				<i id="icon-image" class="fa-sharp fa-regular fa-image" style="display: null"></i>
+				<img id="preview-image" src="#" alt="Image prévisualisée" style="display: none">
+				<label for="add-picture" id="add-picture-button">
+					+ Ajouter une photo
+				</label>
+				<input type="file" name="add-picture" id="add-picture" accept=".png, .jpeg, .jpg" style="display:none">
+				<div id="add-picture-error"><p>jpg, png : 4mo max</p></div>
 			</div>
 			<label for="title">Titre</label>
 			<input type="text" name="title" id="title"></input>
