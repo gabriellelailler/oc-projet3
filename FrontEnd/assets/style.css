@@ -216,19 +216,21 @@ body {
 	margin-bottom: 10px;
 }
 #modal-gallery img {
-	width: auto;
+	width: 76.86px;
 	height: 102.57px;
 	background-color: white;
 	text-align: center;
 	padding: 0px;
 	margin: 0px;
+	object-fit: cover;
 }
 .modal-figure-container{
 	position: relative;
 	margin: 0px;
 	display: inline-block;
 }
-.modal-figure-container i {
+.modal-figure-container .fa-trash-can,
+.modal-figure-container .fa-arrows-up-down-left-right {
 	position: absolute;
 	top: 6px;
 	right: 6px;
@@ -238,6 +240,16 @@ body {
 	border-radius:2px;
 	padding : 5px;
 	margin: 0px;
+}
+.modal-figure-container .fa-trash-can {
+	right: 6px;
+}
+.modal-figure-container .fa-arrows-up-down-left-right {
+	right: 32px;
+	display:none;
+}
+.modal-figure-container:hover .fa-arrows-up-down-left-right {
+	display: block;
 }
 hr{
 	width: 82%;
@@ -339,7 +351,9 @@ hr{
 }
 #modal-add-work img{
 	width:130px;
-	height:auto;
+	height: 250 px;
+	max-height:auto;
+	object-fit: cover;
 }
 #modal-add-work #add-picture-button:hover{
 	cursor:pointer;
@@ -438,7 +452,8 @@ nav .active a {
 
 .gallery img {
 	width: 100%;
-
+	height:407px;
+	object-fit: cover;
 }
 #contact, 
 #login {
@@ -515,14 +530,17 @@ nav .active a {
 	border-radius: 60px ;
 	font-size:14px;
 }
+.green-button{
+	background-color: var(--main-color);
+}
 #contact #contact-submit,
-#login #login-submit{
+#login #login-submit,
+.green-button{
 	background-color: var(--main-color);
 }
 #modal-add-work #modal-add-work-submit{
 	background-color: #A7A7A7;
 }
-
 input[type="submit"]:hover{
 	cursor: pointer;
 }

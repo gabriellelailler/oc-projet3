@@ -274,6 +274,7 @@ const getWorksModal = () => {
             <div class="modal-figure-container">
               <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
               <i class="fa-solid fa-trash-can" id="modal-trash-${dataWorks[productWorks].id}"></i>
+              <i class="fa-solid fa-arrows-up-down-left-right"></i>
               <figcaption>éditer</figcaption>
             <div>
           </figure>
@@ -344,62 +345,79 @@ const iconImage = document.getElementById("icon-image");
 const addPictureButton = document.getElementById("add-picture-button")
 const addPictureError = document.getElementById("add-picture-error")
 
-// change 
+const form = document.querySelector("form");
+
+const formIncomplete = document.getElementById("form-incomplete");
+const errorMessage = document.getElementById("add-work-error-message")
+
+// Vérification de l'image et du reste du formulaire pour chgt couleur bouton 
+
+// Sélectionnez le formulaire et le bouton
+const greenButton = document.getElementById("modal-add-work-submit");
+
+// Ajoutez un écouteur d'événement sur le formulaire pour vérifier si tous les champs sont remplis
+form.addEventListener('input', checkAllFieldsFilled);
+
+// La fonction qui vérifie si tous les champs sont remplis et change la couleur du bouton en conséquence
+function checkAllFieldsFilled() {
+  const allFieldsFilled = Array.from(form.elements).every(input => input.value.trim() !== '');
+  greenButton.style.backgroundColor = allFieldsFilled ? 'var(--main-color)' : 'gray';
+}
+
+// Vérification de l'image et du reste du formulaire pour chgt couleur bouton 
 addPictureInput.addEventListener("change", handleFileSelect);
 
-function handleFileSelect(event) {
+  function handleFileSelect(event) {
 
-  // Récupération du fichier sélectionné par l'utilisateur
-  const file = event.target.files[0];
+    // Récupération du fichier sélectionné par l'utilisateur
+    const file = event.target.files[0];
 
-  // Vérification que l'utilisateur a sélectionné un fichier
-  if (file) {
+    // Vérification que l'utilisateur a sélectionné un fichier
+    if (file) {
 
-    // Vérification de la taille du fichier
-    const fileSizeInBytes = file.size;
-    const maxSizeInBytes = 4 * 1024 * 1024; // 4 Mo en octets
-    if (fileSizeInBytes > maxSizeInBytes) {
-      // Affichage du message d'erreur
-      addPictureError.innerHTML = `<p>La photo sélectionnée dépasse 4 Mo. Sélectionnez un fichier plus petit.</p>`;
-      // Réinitialisation de l'input file pour que l'utilisateur puisse sélectionner un nouveau fichier
-      event.target.value = '';
-      // Réinitialisation de l'image prévisualisée
-      previewImage.src = '';
-      previewImage.style.display = 'none';
-      // Réinitialisation de l'affichage du bouton d'ajout de photo
-      iconImage.style.display = null;
-      addPictureButton.textContent = "Ajouter une photo";
+      // Vérification de la taille du fichier
+      const fileSizeInBytes = file.size;
+      const maxSizeInBytes = 4 * 1024 * 1024; // 4 Mo en octets
+      if (fileSizeInBytes > maxSizeInBytes) {
+        // Affichage du message d'erreur
+        addPictureError.innerHTML = `<p>La photo sélectionnée dépasse 4 Mo. Sélectionnez un fichier plus petit.</p>`;
+        // Réinitialisation de l'input file pour que l'utilisateur puisse sélectionner un nouveau fichier
+        event.target.value = '';
+        // Réinitialisation de l'image prévisualisée
+        previewImage.src = '';
+        previewImage.style.display = 'none';
+        // Réinitialisation de l'affichage du bouton d'ajout de photo
+        iconImage.style.display = null;
+        addPictureButton.textContent = "Ajouter une photo";
 
-    }
-    //si l'image ne dépasse pas les 4mo
-    else {
-      addPictureError.innerHTML = '';
+      }
+      //si l'image ne dépasse pas les 4mo
+      else {
+        addPictureError.innerHTML = '';
 
-      // Création d'un objet FileReader (pour lire le fichier)
-      const reader = new FileReader();
+        // Création d'un objet FileReader (pour lire le fichier)
+        const reader = new FileReader();
 
-      // Définition la fonction de gestion de l'événement onload 
-      // Fonction exécutée en réponse à l'évènement 'onload' du FileReader
-      reader.onload = function (e) {
-        // Mise à jour la source de l'image prévisualisée avec les données de l'image chargée
-        previewImage.src = e.target.result;
-        previewImage.style.display = null;
+        // Définition la fonction de gestion de l'événement onload 
+        // Fonction exécutée en réponse à l'évènement 'onload' du FileReader
+        reader.onload = function (e) {
+          // Mise à jour la source de l'image prévisualisée avec les données de l'image chargée
+          previewImage.src = e.target.result;
+          previewImage.style.display = null;
 
-        // Mise à jour de l'affichage (retrait de l'icône etc.)
-        iconImage.style.display = 'none';
-        addPictureButton.innerHTML = `Changer de photo`;
-      };
-      // Lire le contenu de l'image comme une URL de données
-      reader.readAsDataURL(file);
+          // Mise à jour de l'affichage (retrait de l'icône etc.)
+          iconImage.style.display = 'none';
+          addPictureButton.innerHTML = `Changer de photo`;
+        };
+        // Lire le contenu de l'image comme une URL de données
+        reader.readAsDataURL(file);
+      }
     }
   }
-}
+
 
 // validation du formulaire
 
-const form = document.querySelector("form");
-const formIncomplete = document.getElementById("form-incomplete");
-const errorMessage = document.getElementById("add-work-error-message")
 
 form.addEventListener("submit", async (event) => {
 
@@ -417,14 +435,14 @@ form.addEventListener("submit", async (event) => {
   // Conversion du chiffre en nombre (integer)
   const category = parseInt(chiffre, 10);
 
-   // Conversion de l'image en base64
-  const imageBase64 = await imageToBase64(addPictureInput.files[0]);
+  // récupération de l'image
+  const pictureInput = addPictureInput.files[0];
 
   console.log("categorie est ",category)
   // la constante addPictureInput existe déjà
 
   // Vérification si l'image a été sélectionnée
-  if (!imageBase64) {
+  if (!pictureInput) {
     // affichage d'un message d'erreur
     errorMessage.style.display = "block";
     // return arrête la fonction ici s'il n'y a pas de fichier, sinon elle continue
@@ -440,7 +458,7 @@ form.addEventListener("submit", async (event) => {
 
     // Création d'un objet FormData pour envoyer les données en multipart/form-data
     const formData = new FormData();
-    formData.append("image",imageBase64);
+    formData.append("image", pictureInput);
     formData.append("title", title);
     formData.append("category", category);
 
@@ -452,7 +470,7 @@ form.addEventListener("submit", async (event) => {
       method: "POST",
       // ajout du token dans le headers
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`
       },
       body: formData,
       });
@@ -467,15 +485,3 @@ form.addEventListener("submit", async (event) => {
     }
   }
 })
-
-// Conversion des paramètres pour l'ajout d'un nouveau zork
-// Fonction pour convertir l'image en base64
-function imageToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      resolve(reader.result.split(',')[1]); // Supprimez "data:image/jpeg;base64," du résultat
-    };
-    reader.readAsDataURL(file);
-  });
-}
