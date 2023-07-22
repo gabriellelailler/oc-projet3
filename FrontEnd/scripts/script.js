@@ -338,6 +338,7 @@ containerWorksModal.addEventListener("click", (event) => {
   }
 });
 
+
 // preview de la photo lors de l'upload et vérification de la taille
 const addPictureInput = document.getElementById("add-picture");
 const previewImage = document.getElementById("preview-image");
@@ -350,74 +351,81 @@ const form = document.querySelector("form");
 const formIncomplete = document.getElementById("form-incomplete");
 const errorMessage = document.getElementById("add-work-error-message")
 
-// Vérification de l'image et du reste du formulaire pour chgt couleur bouton 
-
-// Sélectionnez le formulaire et le bouton
 const greenButton = document.getElementById("modal-add-work-submit");
 
-// Ajoutez un écouteur d'événement sur le formulaire pour vérifier si tous les champs sont remplis
-form.addEventListener('input', checkAllFieldsFilled);
 
-// La fonction qui vérifie si tous les champs sont remplis et change la couleur du bouton en conséquence
-function checkAllFieldsFilled() {
-  const allFieldsFilled = Array.from(form.elements).every(input => input.value.trim() !== '');
-  greenButton.style.backgroundColor = allFieldsFilled ? 'var(--main-color)' : 'gray';
-}
+// Vérification de l'image et title pour couleur bouton et message d'erreur
 
-// Vérification de l'image et du reste du formulaire pour chgt couleur bouton 
-addPictureInput.addEventListener("change", handleFileSelect);
+addPictureInput.addEventListener("input", checkFormValidity);
+document.getElementById("title").addEventListener("input", checkFormValidity);
 
-  function handleFileSelect(event) {
+// Fonction de validation du formulaire
+function checkFormValidity() {
+  const title = document.getElementById("title").value.trim();
+  const pictureInput = addPictureInput.files[0];
 
-    // Récupération du fichier sélectionné par l'utilisateur
-    const file = event.target.files[0];
+  const isValidImage = pictureInput && pictureInput.type.startsWith("image/");
+  const isValidTitle = title.length > 0;
+  let isValidFileSize = true;
 
-    // Vérification que l'utilisateur a sélectionné un fichier
-    if (file) {
+  // Vérification de la taille du fichier et preview de l'image
+  if (pictureInput) {
+    const fileSizeInBytes = pictureInput.size;
+    const maxSizeInBytes = 4 * 1024 * 1024; // 4 Mo en octets
 
-      // Vérification de la taille du fichier
-      const fileSizeInBytes = file.size;
-      const maxSizeInBytes = 4 * 1024 * 1024; // 4 Mo en octets
-      if (fileSizeInBytes > maxSizeInBytes) {
-        // Affichage du message d'erreur
-        addPictureError.innerHTML = `<p>La photo sélectionnée dépasse 4 Mo. Sélectionnez un fichier plus petit.</p>`;
-        // Réinitialisation de l'input file pour que l'utilisateur puisse sélectionner un nouveau fichier
-        event.target.value = '';
-        // Réinitialisation de l'image prévisualisée
-        previewImage.src = '';
-        previewImage.style.display = 'none';
-        // Réinitialisation de l'affichage du bouton d'ajout de photo
-        iconImage.style.display = null;
-        addPictureButton.textContent = "Ajouter une photo";
+    // image trop grande
+    if (fileSizeInBytes > maxSizeInBytes) {
+      addPictureError.innerHTML = "<p>La photo sélectionnée dépasse 4 Mo. Sélectionnez un fichier plus petit.</p>";
+      // Réinitialisation de l'input file pour que l'utilisateur puisse sélectionner un nouveau fichier
+      addPictureInput.value = "";
+      // Réinitialisation de l'image prévisualisée
+      previewImage.src = "";
+      previewImage.style.display = "none";
+      // Réinitialisation de l'affichage du bouton d'ajout de photo
+      iconImage.style.display = null;
+      addPictureButton.textContent = "+ Ajouter une photo";
+      isValidFileSize = false;
+    
+    // image de taille ok
+    } else {
+      addPictureError.innerHTML = "";
+      // Création d'un objet FileReader (pour lire le fichier)
+      const reader = new FileReader();
+      // Définition de la fonction de gestion de l'événement onload
+      // Fonction exécutée en réponse à l'évènement 'onload' du FileReader
+      reader.onload = function (e) {
+      // Mise à jour la source de l'image prévisualisée avec les données de l'image chargée
+        previewImage.src = e.target.result;
+        previewImage.style.display = null;
 
-      }
-      //si l'image ne dépasse pas les 4mo
-      else {
-        addPictureError.innerHTML = '';
-
-        // Création d'un objet FileReader (pour lire le fichier)
-        const reader = new FileReader();
-
-        // Définition la fonction de gestion de l'événement onload 
-        // Fonction exécutée en réponse à l'évènement 'onload' du FileReader
-        reader.onload = function (e) {
-          // Mise à jour la source de l'image prévisualisée avec les données de l'image chargée
-          previewImage.src = e.target.result;
-          previewImage.style.display = null;
-
-          // Mise à jour de l'affichage (retrait de l'icône etc.)
-          iconImage.style.display = 'none';
-          addPictureButton.innerHTML = `Changer de photo`;
-        };
-        // Lire le contenu de l'image comme une URL de données
-        reader.readAsDataURL(file);
-      }
+      // Mise à jour de l'affichage (retrait de l'icône etc.)
+      iconImage.style.display = 'none';
+      addPictureButton.innerHTML = `Changer de photo`;
+      };
+      // Lecture le contenu de l'image comme une URL de données
+      reader.readAsDataURL(pictureInput);
+      isValidFileSize = true;
     }
   }
 
+  // Màj du bouton & message d'erreur si image & titre
+  const greenButton = document.getElementById("modal-add-work-submit");
+  if (isValidImage && isValidTitle  && isValidFileSize) {
+    greenButton.classList.remove("gray-button");
+    greenButton.classList.add("green-button");
+    errorMessage.style.display = "none";
+  } else {
+    greenButton.classList.remove("green-button");
+    greenButton.classList.add("gray-button");
+    errorMessage.style.display = "block";
+  }
+}
 
-// validation du formulaire
+// Réinitialisation bouton et message d'erreur au chargement initial
+checkFormValidity();
 
+
+// Validation du formulaire
 
 form.addEventListener("submit", async (event) => {
 

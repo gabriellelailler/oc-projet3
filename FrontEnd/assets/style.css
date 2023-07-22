@@ -523,23 +523,34 @@ nav .active a {
 	margin: 2em 0 1em 0;
 	font-family: 'Syne';
 	font-weight: 700;
-	color: white;
 	margin : 2em auto ;
 	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
 	font-size:14px;
 }
-.green-button{
-	background-color: var(--main-color);
+#modal-add-work .green-button:hover,
+#contact #contact-submit:hover,
+#login #login-submit:hover{
+	color: var(--main-color);
+	border: solid 1px var(--main-color);
+}
+#contact #contact-submit:hover,
+#login #login-submit:hover{
+	background-color: var(--main-bg-color);
+}
+#modal-add-work .green-button:hover{
+	background-color: white;
 }
 #contact #contact-submit,
 #login #login-submit,
-.green-button{
+#modal-add-work .green-button{
 	background-color: var(--main-color);
+	color: white;
 }
-#modal-add-work #modal-add-work-submit{
+#modal-add-work .gray-button{
 	background-color: #A7A7A7;
+	color: white;
 }
 input[type="submit"]:hover{
 	cursor: pointer;
