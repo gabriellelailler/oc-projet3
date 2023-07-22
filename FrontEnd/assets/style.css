@@ -158,10 +158,11 @@ body {
 #modal-gallery figcaption,
 #modal-add-work form,
 #modal-add-work form input,
-#modal-add-work form label{
+#modal-add-work form label,
+#add-work-validation-message{
 	background-color: white;
 }
-#add-work-error-message > * {
+#add-work-error-message > *{
 	background-color: transparent;
 }
 
@@ -205,7 +206,7 @@ body {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr); /* Crée 5 colonnes avec la même largeur */
 	gap: 5px;
-	margin-top: 30px;
+	margin-top: 60px;
 }
 #modal-gallery figure,
 #modal-gallery figcaption {
@@ -485,6 +486,11 @@ nav .active a {
 	color: red;
 	padding-bottom: 20px;
 	text-align: center;
+}
+#add-work-validation-message{
+	padding-top: 20px;
+	text-align: center;
+	color: var(--main-color);
 }
 #contact form,
 #login form {

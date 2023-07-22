@@ -91,7 +91,7 @@ const getCategories = () => {
                         for (productWorks in dataWorks)
                         if (i === 0) {
                             containerWorks.innerHTML += `
-                            <figure>
+                            <figure id="work-${dataWorks[productWorks].id}" data-image-id="${dataWorks[productWorks].id}">
                             <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
                             <figcaption>${dataWorks[productWorks].title}</figcaption>
                             </figure>
@@ -99,13 +99,14 @@ const getCategories = () => {
                         } 
                         else if (dataWorks[productWorks].categoryId === i) {
                         containerWorks.innerHTML += `
-                          <figure>
+                          <figure id="work-${dataWorks[productWorks].id}" data-image-id="${dataWorks[productWorks].id}">
                           <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
                           <figcaption>${dataWorks[productWorks].title}</figcaption>
                           </figure>
                           `;
                         }
                       });
+                    
                   };
                 getWorksFilter();
  
@@ -258,6 +259,7 @@ modalAddWorkArrowLeft.addEventListener("click", () => {
 const containerWorksModal = document.getElementById("modal-gallery")
 
 const getWorksModal = () => {
+  containerWorksModal.innerHTML = ""
   fetch("http://localhost:5678/api/works")
 
       // renvoie tous les Works depuis la db api/categories
@@ -322,21 +324,25 @@ containerWorksModal.addEventListener("click", (event) => {
       } else {
       console.log("L'image a été supprimée avec succès !");
       
-      // On vide la liste actuelle d'images de la modale
-      containerWorksModal.innerHTML = "";
-      // On récupère les images à partir de l'API et on les affiche sur la modale
-      getWorksModal(); 
+      // Suppression de l'élément de la liste sans recharger la page
+      const elementToRemove = event.target.closest("figure");
+      containerWorksModal.removeChild(elementToRemove);
 
-      // De même avec la page principale
-      containerWorks.innerHTML = "";
-      getWorksInitial(); 
-    } 
+      // non fonctionnel
+      const imageIdToRemove = event.target.closest("figure").getAttribute("data-image-id");
+      const elementToRemoveFromGallery = document.getElementById(`work-${imageIdToRemove}`);
+      containerWorks.removeChild(elementToRemoveFromGallery);
+     
+     }
     })
     .catch((error) => {
       console.error(error);
     });
   }
 });
+
+
+
 
 
 // preview de la photo lors de l'upload et vérification de la taille
@@ -350,6 +356,7 @@ const form = document.querySelector("form");
 
 const formIncomplete = document.getElementById("form-incomplete");
 const errorMessage = document.getElementById("add-work-error-message")
+const validationMessage = document.getElementById("add-work-validation-message")
 
 const greenButton = document.getElementById("modal-add-work-submit");
 
@@ -385,6 +392,7 @@ function checkFormValidity() {
       iconImage.style.display = null;
       addPictureButton.textContent = "+ Ajouter une photo";
       isValidFileSize = false;
+      validationMessage.style.display = "none";
     
     // image de taille ok
     } else {
@@ -405,6 +413,7 @@ function checkFormValidity() {
       // Lecture le contenu de l'image comme une URL de données
       reader.readAsDataURL(pictureInput);
       isValidFileSize = true;
+      validationMessage.style.display = "none";
     }
   }
 
@@ -414,10 +423,12 @@ function checkFormValidity() {
     greenButton.classList.remove("gray-button");
     greenButton.classList.add("green-button");
     errorMessage.style.display = "none";
+    validationMessage.style.display = "none";
   } else {
     greenButton.classList.remove("green-button");
     greenButton.classList.add("gray-button");
     errorMessage.style.display = "block";
+    validationMessage.style.display = "none";
   }
 }
 
@@ -433,7 +444,7 @@ form.addEventListener("submit", async (event) => {
 
   const title = document.getElementById("title").value;
 
-  const selectElement = document.getElementById('category');
+  const selectElement = document.getElementById("category");
   // Récupérer l'index de l'option sélectionnée
   const selectedIndex = selectElement.selectedIndex;
   // Récupérer l'attribut id de l'option sélectionnée
@@ -484,6 +495,28 @@ form.addEventListener("submit", async (event) => {
       });
       if (response.ok) {
         console.log("POST réussi");
+        validationMessage.style.display = "block";
+        greenButton.classList.remove("green-button");
+        greenButton.classList.add("gray-button");
+
+        // réinitialisation des champs
+        document.getElementById("title").value = "";
+        document.getElementById("category").value = "objets";
+        document.getElementById("add-picture").value = "";
+
+        // réinitialisation de l'image prévisualisée
+        document.getElementById("preview-image").src = "";
+        document.getElementById("preview-image").style.display = "none";
+        document.getElementById("icon-image").style.display = null;
+        document.getElementById("add-picture-button").textContent = "+ Ajouter une photo";
+
+        // Suppression de l'élément de la liste sans recharger la page
+        // non fonctionnel
+        const elementToAdd = event.target.closest("figure");
+        containerWorksModal.appendChild(elementToAdd);
+        containerWorks.appendChild(elementToAdd);
+
+
       } else {
         console.log("POST échoué");
       }
