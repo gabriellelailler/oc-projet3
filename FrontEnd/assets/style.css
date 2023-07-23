@@ -10,7 +10,7 @@
 	--dark-gray: #3D3D3D;
 }
 
-* {
+html {
 	background-color: var(--main-bg-color);
 	color: var(--dark-gray);
 }
@@ -60,14 +60,113 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-/** end reset css**/
 body {
 	max-width: 1140px;
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
-/** end reset css**/
+a {
+	color: white;
+}
+
+/** buttons **/
+
+button,
+input[type="submit"],
+#add-picture-button,
+.clicked-button {
+	padding: 9px 21px 9px 21px;
+	width: auto;
+	text-align: center;
+	border-radius: 60px;
+}
+button:hover,
+input[type="submit"]:hover,
+#add-picture-button:hover{
+	cursor: pointer;
+}
+input[type="submit"]{
+	margin : 2em auto ;
+	width: 180px;
+}
+.green-button,
+.gray-button,
+.filter-button,
+.clicked-button {
+	font-family: 'Syne';
+	font-weight: 700;
+}
+.green-button,
+.gray-button,
+.clicked-button {
+	color: white;
+}
+.green-button,
+.clicked-button {
+	background-color: var(--main-color);
+	border: none;
+}
+
+.green-button:hover {
+	background-color: transparent;
+	color: var(--main-color);
+	border: solid 1px var(--main-color);
+}
+.gray-button{
+	background-color: #A7A7A7;
+}
+.filter-button{
+	background-color: var(--main-bg-color);
+	border: solid 1px var(--main-color);
+	color: var(--main-color);
+}
+.filter-button:hover{
+	color: var(--main-bg-color);
+	background-color: var(--main-color);
+}
+#add-picture-button{
+	background-color: #CBD6DC;
+	border-radius: 50px;
+	color: #306685;
+	font-family: 'Work Sans';
+	font-weight: 500;
+}
+.add-delete-buttons{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+#edit-button-1,
+#edit-button-2,
+#publish-button{
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 400;
+}
+#edit-button-1 {
+	background-color: transparent;
+	border:none;
+}
+#edit-button-2{
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	color: black;
+}
+#edit-button-1 i,
+#edit-button-2 i{
+	margin: 0px 0px 0px 10px;
+}
+#edit-button-1{
+	color: white;
+}
+#publish-button {
+	margin: 8px 7px 8px 7px;
+	color: black;
+	background-color: white;
+	border:none;
+}
 
 /** edit bar & modal **/
 #edit-bar{
@@ -80,59 +179,12 @@ body {
   	width: 100%;
 	margin: 0px;
 }
-#edit-bar i {
-	background-color: transparent;
-	color: white;
-
-}
-#edit-button-1 {
-	color: white;
-	font-family: 'Work Sans', sans-serif;
-	font-weight: 400;
-	background-color: transparent;
-	border:none;
-}
-
-#edit-button-1 a {
-	background-color: transparent;
-	color: white;
-	margin: 0px;
-}
-#edit-button-1:hover {
-	background-color: transparent;
-	border:none;
-}
-#publish-button {
-	margin: 8px 7px 8px 7px;
-	color: black;
-	font-family: 'Work Sans', sans-serif;
-	font-weight: 400;
-	background-color: white;
-	border:none;
-}
-#publish-button:hover {
-	color: var(--dark-gray);
-	background-color: white;
-	border:none;
-}
 .projects-title{
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
-#edit-button-2{
-	display:flex;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-}
-#edit-button-2 i{
-	margin: 0px 0px 0px 10px;
-	color: black;
-}
-#edit-button-2 p{
-	color: black;
-}
+
 #modal,
 #modal-add-work {
 	background: rgba(0, 0, 0, 0.3);
@@ -157,8 +209,6 @@ body {
 #modal-gallery figure,
 #modal-gallery figcaption,
 #modal-add-work form,
-#modal-add-work form input,
-#modal-add-work form label,
 #add-work-validation-message{
 	background-color: white;
 }
@@ -300,11 +350,7 @@ hr{
 	border: none;
 	font-weight: 400;
 }
-.modal-wrapper .add-delete-buttons{
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
+
 
 /** ajout de photos **/
 #modal-add-work #add-picture-area{
@@ -333,15 +379,6 @@ hr{
 	background-color: #E8F1F6;
 	text-align: center;
 }
-#modal-add-work #add-picture-button{
-	background-color: #CBD6DC;
-	border-radius: 50px;
-	color: #306685;
-	padding: 9px 21px 9px 21px;
-	font-family: 'Work Sans';
-	font-weight: 500;
-}
-
 #modal-add-work #add-picture-area label:hover{
 	background-color: #CBD6DC;
 	border-radius: 50px;
@@ -356,9 +393,7 @@ hr{
 	max-height:auto;
 	object-fit: cover;
 }
-#modal-add-work #add-picture-button:hover{
-	cursor:pointer;
-}
+
 
 /** reste du formulaire **/
 #modal-add-work form{
@@ -500,66 +535,25 @@ nav .active a {
 	flex-direction: column;
 }
 
-#contact input,
-#login input,
-#modal-add-work input,
+form input,
+form input,
+form input,
 #modal-add-work select {
 	height: 50px;
 	font-size: 14px;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	background-color: white;
 	font-family: 'Work Sans' ;
 }
+
 #contact label,
 #login label,
 #modal-add-work label {
 	margin: 2em 0 1em 0;
 }
-#contact textarea,
-#login textarea {
+#contact textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	background-color: white;
-}
-
-#contact #contact-submit,
-#login #login-submit,
-#modal-add-work #modal-add-work-submit{
-	margin: 2em 0 1em 0;
-	font-family: 'Syne';
-	font-weight: 700;
-	margin : 2em auto ;
-	width: 180px;
-	text-align: center;
-	border-radius: 60px ;
-	font-size:14px;
-}
-#modal-add-work .green-button:hover,
-#contact #contact-submit:hover,
-#login #login-submit:hover{
-	color: var(--main-color);
-	border: solid 1px var(--main-color);
-}
-#contact #contact-submit:hover,
-#login #login-submit:hover{
-	background-color: var(--main-bg-color);
-}
-#modal-add-work .green-button:hover{
-	background-color: white;
-}
-#contact #contact-submit,
-#login #login-submit,
-#modal-add-work .green-button{
-	background-color: var(--main-color);
-	color: white;
-}
-#modal-add-work .gray-button{
-	background-color: #A7A7A7;
-	color: white;
-}
-input[type="submit"]:hover{
-	cursor: pointer;
 }
 footer nav ul {
 	display: flex;
@@ -573,28 +567,3 @@ footer nav ul {
 	justify-content: center;
 	flex-wrap: nowrap;
 }
-
-button {
-	font-family: 'Syne';
-	font-weight: 700;
-	color: var(--main-color);
-	border: solid 1px var(--main-color);
-	padding: 9px 21px 9px 21px;
-	width: auto;
-	text-align: center;
-	border-radius: 60px;
-	background-color: var(--main-bg-color);
-}
-
-button:hover {
-	color: var(--main-bg-color);
-	background-color: var(--main-color);
-	cursor: pointer;
-}
-
-.clicked-button {
-	color: var(--main-bg-color);
-	background-color: var(--main-color);
-}
-
-

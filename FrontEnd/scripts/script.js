@@ -1,19 +1,55 @@
+// Variables et constantes générales
+
+// Galleries et filtres
 const containerCategories = document.getElementById("categories");
 const containerWorks = document.getElementById("gallery");
-let i = 0;
+const containerWorksModal = document.getElementById("modal-gallery")
 
-// affichage de tous les Works depuis la db api/categories
+// Token d'identification
+let authToken = sessionStorage.getItem("authToken");
 
+// login / logout
+const loginTab = document.getElementById('login-tab');
+const logoutTab = document.getElementById('logout-tab');
+
+// Accès à la modale
+const editBar = document.getElementById("edit-bar");
+const editButton1 = document.getElementById("edit-button-1");
+const editButton2 = document.getElementById("edit-button-2");
+
+// Navigation dans la modale
+const modalXmark = document.getElementById("modal-xmark")
+const modalAddWorkXmark = document.getElementById("modal-add-work-xmark")
+const modal = document.getElementById("modal")
+const modalAddWork = document.getElementById("modal-add-work")
+const modalAddWorkArrowLeft = document.getElementById("modal-add-work-arrow-left")
+const addWork = document.getElementById("add-work") // bouton pour ouvrir la 2e modale
+
+// Variables et constantes du formulaire d'ajout de photos
+const form = document.querySelector("form");
+
+const addPictureInput = document.getElementById("add-picture");
+const previewImage = document.getElementById("preview-image");
+const iconImage = document.getElementById("icon-image");
+const addPictureButton = document.getElementById("add-picture-button")
+const addPictureError = document.getElementById("add-picture-error")
+
+const formIncomplete = document.getElementById("form-incomplete");
+const errorMessage = document.getElementById("add-work-error-message")
+const validationMessage = document.getElementById("add-work-validation-message")
+
+const greenButtonAddWork = document.getElementById("modal-add-work-submit");
+
+// Bouton de suppression de toute la gallerie
+const deleteAll = document.getElementById("delete-all");
+
+// Fonction d'affichage de la gallerie
 const getWorksInitial = () => {
   containerWorksModal.innerHTML = "";
   fetch("http://localhost:5678/api/works")
-
-      // renvoie tous les Works depuis la db api/categories
     .then(function (responseWorks) {
       return responseWorks.json();
     })
-
-    // affiche de base tous les works
     .then(function (dataWorks) {
       console.log(dataWorks);
       for (productWorks in dataWorks) {
@@ -27,7 +63,7 @@ const getWorksInitial = () => {
     });
 };
 
-// affichage des catégories
+// Fonction d'affichage des catégories et de la gallerie
 const getCategories = () => {
     fetch("http://localhost:5678/api/categories")
     .then(function(responseCategories) {
@@ -36,57 +72,56 @@ const getCategories = () => {
     .then(function(dataCategories) {
         console.log(dataCategories);
 
-        // ajout du bouton "Tous"
+        // Ajout du bouton "Tous"
         containerCategories.innerHTML += `
         <div>
-        <button id="buttonCategories0">Tous</button>
+        <button id="buttonCategories0" class="filter-button">Tous</button>
         </div>
         `;
 
-        // ajout des 3 autres boutons depuis la db api/categories
+        // Ajout des 3 autres boutons depuis la DB
         for (productCategories in dataCategories)
         containerCategories.innerHTML += `
         <div>
-        <button id="buttonCategories${dataCategories[productCategories].id}">${dataCategories[productCategories].name}</button>
+        <button id="buttonCategories${dataCategories[productCategories].id}" class="filter-button">${dataCategories[productCategories].name}</button>
         </div>
         `;
 
         getWorksInitial();
         
-        // fonction renvoyant l'id de la catégorie au moment du clic sur le bouton
+        // Renvoi de l'id de la catégorie au clic
         function addButtonClickListeners() {
 
-            // définit la variable previousButton afin de supprimer la classe de l'ancien bouton à chaque clic
+            // Définit la variable previousButton (afin de supprimer la classe de l'ancien bouton à chaque clic)
             let previousButton = null;
 
-            // parcourt les 4 id des button buttonCategories0, buttonCategories1, buttonCategories2 ou buttonCategories3
+            // Parcourt les 4 id des button buttonCategories0, buttonCategories1, buttonCategories2 ou buttonCategories3
             for (let i = 0; i < 4; i++) {
               let button = document.getElementById("buttonCategories" + i);
 
-              // ci-dessous toutes les fonctions déclenchées par le clic sur le button
               button.addEventListener("click", () => {
 
                 // s'il y a un previousButton, retrait de la classe
                 if (previousButton !== null) {
                     previousButton.classList.remove("clicked-button");
+                    previousButton.classList.add("filter-button");
                 }
                 // previousButton se re-remplit avec le nouveau button (jusau'au clic suivant)
                 previousButton=button;
 
+                // ajout de la classe sur le bouton cliqué
                 button.classList.add("clicked-button");
+                previousButton.classList.remove("filter-button");
 
-                // on vide la page à chaque clic
+                // on vide la page à chaque clic, pour la remplir avec les éléments filtrés
                 containerWorks.innerHTML = ``
+                
                 
                 const getWorksFilter = () => {
                     fetch("http://localhost:5678/api/works")
-
-                        // renvoie tous les Works depuis la db api/categories
                       .then(function (responseWorks) {
                         return responseWorks.json();
                       })
-
-                      // cette fonction affiche les Works selon la valeur de i (selon le clic ci-dessus)
                       .then(function (dataWorks) {
                         for (productWorks in dataWorks)
                         if (i === 0) {
@@ -106,81 +141,44 @@ const getCategories = () => {
                           `;
                         }
                       });
-                    
                   };
-                getWorksFilter();
- 
+                getWorksFilter(); 
               });
             }
         }
-
-      addButtonClickListeners();
-        
+      addButtonClickListeners();        
     })
-
 }
 
+// Execution de getCategories
 getCategories();
 
 
-const loginTab = document.getElementById('login-tab');
-const logoutTab = document.getElementById('logout-tab');
-const editBar = document.getElementById("edit-bar");
-const editButton2 = document.getElementById("edit-button-2");
-let authToken = sessionStorage.getItem("authToken");
-
-// vérification que l'utilisateur est bien connecté
+// Apparition / Disparition de l'interface d'édition
 window.addEventListener('DOMContentLoaded', function() {
   if (authToken) {
-      // L'utilisateur est connecté
       console.log('Utilisateur connecté');
-      // disparition de l'onglet login
-      loginTab.style.display = 'none';
-      // apparition de l'onglet logout
-      logoutTab.style.display = null;
-      // apparition de l'edit-bar
-      editBar.style.display = null;
-      // apparition du 2e bouton d'édition
-      editButton2.style.display = null;
+      loginTab.style.display = 'none'; // disparition de l'onglet login
+      logoutTab.style.display = null; // apparition de l'onglet logout
+      editBar.style.display = null; // apparition de l'edit-bar
+      editButton2.style.display = null; // apparition du 2e bouton d'édition
 
   } else {
-      // L'utilisateur n'est pas connecté
       console.log('Utilisateur non connecté');
-      // apparition de l'onglet login
       loginTab.style.display = null;
-      // disparition de l'onglet logout
       logoutTab.style.display = 'none';
-      // disparition de l'edit-bar
       editBar.style.display = 'none';
   }
 });
 
-// lors du click sur l'onglet logout, deconnexion
+// Deconnexion au clic sur "logout"
 logoutTab.addEventListener("click", () => {
-  clearSessionStorage();
+  sessionStorage.clear();
+  window.location.href = "index.html"
 });
 
 
-// fonction à appeler lors de la déconnexion
-function clearSessionStorage() {
-  sessionStorage.clear();
-  window.location.href = "index.html"
-}
-
-function openModal() {
-  const modal = document.getElementById("modal");
-  modal.showModal();
-}
-
-
-// ouverture de la modale
-const editButton1 = document.getElementById("edit-button-1")
-const modalXmark = document.getElementById("modal-xmark")
-const modalAddWorkXmark = document.getElementById("modal-add-work-xmark")
-const modal = document.getElementById("modal")
-const modalAddWork = document.getElementById("modal-add-work")
-const modalAddWorkArrowLeft = document.getElementById("modal-add-work-arrow-left")
-
+// Ouverture de la modale
 editButton1.addEventListener("click", () => {
   modal.style.display = null
   modal.removeAttribute('aria-hidden')
@@ -196,14 +194,12 @@ editButton2.addEventListener("click", () => {
 });
 
 // Ouverture de la modale d'ajout de photo
-const addWork = document.getElementById("add-work")
-
 addWork.addEventListener("click", () => {
-  modalAddWork.style.display = null
+  modalAddWork.style.display = null // apparition de la 2e modale
   modalAddWork.removeAttribute('aria-hidden')
   modalAddWork.setAttribute('aria-modal', 'true')
   
-  modal.style.display = 'none'
+  modal.style.display = 'none' // retrait de la 1e modale
   modal.removeAttribute('aria-modal')
   modal.setAttribute('aria-hidden', 'true')
 
@@ -211,7 +207,7 @@ addWork.addEventListener("click", () => {
 
 });
 
-// fermeture de la modale principale quand on clique sur la croix
+// Fermeture des modales au clic sur la croix
 modalXmark.addEventListener("click", () => {
   modal.style.display = 'none'
   modal.removeAttribute('aria-modal')
@@ -219,7 +215,6 @@ modalXmark.addEventListener("click", () => {
   modalXmark.removeEventListener("click", ()=> {})
 });
 
-// fermeture de la modale d'ajout de photos quand on clique sur la croix
 modalAddWorkXmark.addEventListener("click", () => {
   modalAddWork.style.display = 'none'
   modalAddWork.removeAttribute('aria-modal')
@@ -227,8 +222,7 @@ modalAddWorkXmark.addEventListener("click", () => {
   modalAddWorkXmark.removeEventListener("click", ()=> {})
 });
 
-
-// fermeture des modales quand on clique en dehors
+// Fermeture des modales au clic en dehors
 window.addEventListener("click", (event) => {
   if (event.target === modal | event.target === modalAddWork) {
   modal.style.display = 'none'
@@ -242,7 +236,7 @@ window.addEventListener("click", (event) => {
   }
 });
 
-// retour à la modale principale depuis la modale d'ajout de photos
+// Retour à la modale principale depuis la modale d'ajout de photos
 modalAddWorkArrowLeft.addEventListener("click", () => {
   modalAddWork.style.display = 'none'
   modalAddWork.removeAttribute('aria-modal')
@@ -254,21 +248,14 @@ modalAddWorkArrowLeft.addEventListener("click", () => {
   modalAddWorkArrowLeft.removeEventListener("click", ()=> {})
 });
 
-// affichage des images dans la modale
-const containerWorksModal = document.getElementById("modal-gallery")
-
+// Fonction d'affichage des images dans la modale
 const getWorksModal = () => {
   containerWorksModal.innerHTML = ""
   fetch("http://localhost:5678/api/works")
-
-      // renvoie tous les Works depuis la db api/categories
     .then(function (responseWorks) {
       return responseWorks.json();
     })
-
-    // affiche de base tous les works
     .then(function (dataWorks) {
-      console.log(dataWorks);
       for (productWorks in dataWorks) {
           containerWorksModal.innerHTML += `
           <figure id="modal-work-${dataWorks[productWorks].id}">
@@ -284,36 +271,25 @@ const getWorksModal = () => {
     });
 };
 
+// Execution de getWorksModal
 getWorksModal();
 
 
-// suppression d'une image depuis la modale
+// Suppression d'une image depuis la modale
 
-// écoute des click sur la modal
 containerWorksModal.addEventListener("click", (event) => {
 
-  //si le click porte sur une ligne avec icone trash-can 
+  //Si le click porte sur une ligne avec icone trash-can 
   if (event.target.classList.contains("fa-trash-can")) {
-    // récupération de l'id de l'image
-    // event.target -> <i class="fa-solid fa-trash-can" id="modal-trash-2"></i>
-    // event.target.id -> "modal-trash-2"
-    // event.target.id.split("-") splite "modal-trash-2" en tableau -> ["modal" "trash" "2"]
-    // event.target.id.split("-")[2] renvoie le 3e élément du tableau -> 2
-    const id = event.target.id.split("-")[2];
-    console.log("Vous avez cliqué sur l'image d'ID :", id);
-
-    // récupération du token dans le sessionStorage 
+    const id = event.target.id.split("-")[2]; // event.target.id -> "modal-trash-2", event.target.id.split("-") -> ["modal" "trash" "2"], event.target.id.split("-")[2] -> 2
     let authToken = sessionStorage.getItem('authToken');
     if (!authToken) {
       console.error("Token d'authentification manquant !");
       return;
     }
-
     const urlDelete = `http://localhost:5678/api/works/${id}`
-
     fetch(urlDelete, {
       method: "DELETE",
-      // ajout du token dans le headers
       headers: {"Authorization": `Bearer ${authToken}`}, 
     })
 
@@ -321,16 +297,15 @@ containerWorksModal.addEventListener("click", (event) => {
       if (!response.ok) {
         console.error("Une erreur s'est produite lors de la suppression de l'image.");
       } else {
-      console.log("L'image a été supprimée avec succès !");
-      
-      // Suppression de l'élément de la modale sans recharger la page
-      const elementToRemove = event.target.closest("figure");
-      containerWorksModal.removeChild(elementToRemove);
-
-      // Suppression de l'élément de la page principale sans recharger la page
-      const elementToRemoveFromGallery = document.getElementById(`gallery-work-${id}`);
-      elementToRemoveFromGallery.remove();
-     
+        console.log("L'image a été supprimée avec succès !");
+        
+        // Suppression de l'élément de la modale sans recharger la page
+        const elementToRemove = event.target.closest("figure");
+        containerWorksModal.removeChild(elementToRemove);
+        
+        // Suppression de l'élément de la page principale sans recharger la page
+        const elementToRemoveFromGallery = document.getElementById(`gallery-work-${id}`);
+        elementToRemoveFromGallery.remove();
      }
     })
     .catch((error) => {
@@ -340,25 +315,7 @@ containerWorksModal.addEventListener("click", (event) => {
 });
 
 
-
-
-
-// preview de la photo lors de l'upload et vérification de la taille
-const addPictureInput = document.getElementById("add-picture");
-const previewImage = document.getElementById("preview-image");
-const iconImage = document.getElementById("icon-image");
-const addPictureButton = document.getElementById("add-picture-button")
-const addPictureError = document.getElementById("add-picture-error")
-
-const form = document.querySelector("form");
-
-const formIncomplete = document.getElementById("form-incomplete");
-const errorMessage = document.getElementById("add-work-error-message")
-const validationMessage = document.getElementById("add-work-validation-message")
-
-const greenButton = document.getElementById("modal-add-work-submit");
-
-
+// Preview de la photo lors de l'upload et vérification de la taille
 // Vérification de l'image et title pour couleur bouton et message d'erreur
 
 addPictureInput.addEventListener("input", checkFormValidity);
@@ -416,15 +373,15 @@ function checkFormValidity() {
   }
 
   // Màj du bouton & message d'erreur si image & titre
-  const greenButton = document.getElementById("modal-add-work-submit");
+  const greenButtonAddWork = document.getElementById("modal-add-work-submit");
   if (isValidImage && isValidTitle  && isValidFileSize) {
-    greenButton.classList.remove("gray-button");
-    greenButton.classList.add("green-button");
+    greenButtonAddWork.classList.remove("gray-button");
+    greenButtonAddWork.classList.add("green-button");
     errorMessage.style.display = "none";
     validationMessage.style.display = "none";
   } else {
-    greenButton.classList.remove("green-button");
-    greenButton.classList.add("gray-button");
+    greenButtonAddWork.classList.remove("green-button");
+    greenButtonAddWork.classList.add("gray-button");
     errorMessage.style.display = "block";
     validationMessage.style.display = "none";
   }
@@ -435,57 +392,41 @@ checkFormValidity();
 
 
 // Validation du formulaire
-
 form.addEventListener("submit", async (event) => {
 
   event.preventDefault();
 
-  const title = document.getElementById("title").value;
+  const title = document.getElementById("title").value; // Récupération du titre
 
   const selectElement = document.getElementById("category");
-  // Récupérer l'index de l'option sélectionnée
-  const selectedIndex = selectElement.selectedIndex;
-  // Récupérer l'attribut id de l'option sélectionnée
-  const selectedOptionId = selectElement.options[selectedIndex].id;
-  // Extraire le chiffre de l'attribut id
-  const chiffre = selectedOptionId.split('-')[1];
-  // Conversion du chiffre en nombre (integer)
-  const category = parseInt(chiffre, 10);
+  const selectedIndex = selectElement.selectedIndex; // Récupération de l'index de l'option sélectionnée
+  const selectedOptionId = selectElement.options[selectedIndex].id; // Récupération de l'attribut id de l'option sélectionnée
+  const chiffre = selectedOptionId.split('-')[1]; // Extraction du chiffre le chiffre de l'attribut id
+  const category = parseInt(chiffre, 10); // Conversion du chiffre en nombre (integer)
 
-  // récupération de l'image
-  const pictureInput = addPictureInput.files[0];
+  const pictureInput = addPictureInput.files[0]; // Récupération de l'image
 
-  console.log("categorie est ",category)
-  // la constante addPictureInput existe déjà
-
-  // Vérification si l'image a été sélectionnée
-  if (!pictureInput) {
-    // affichage d'un message d'erreur
-    errorMessage.style.display = "block";
-    // return arrête la fonction ici s'il n'y a pas de fichier, sinon elle continue
-    return;
+  if (!pictureInput) { // Vérification si l'image a bien été sélectionnée
+    errorMessage.style.display = "block"; // affichage du message d'erreur
+    return; // arrêt de la fonction car pas de fichier
   }
 
-  if (!title || !chiffre) {
-    // affichage d'un message d'erreur
+  if (!title || !chiffre) { //si pas de categorie ou pas titre
     errorMessage.style.display = "block";
-    return;
+    return; // arrêt de la fonction
   } else {
-    // pas de message d'erreur
+    errorMessage.style.display = "none"; // pas de message d'erreur
 
-    // Création d'un objet FormData pour envoyer les données en multipart/form-data
+    // Création d'un objet FormData pour envoyer les données
     const formData = new FormData();
     formData.append("image", pictureInput);
     formData.append("title", title);
     formData.append("category", category);
 
-    errorMessage.style.display = "none";
-
     try{
       const response = await
       fetch("http://localhost:5678/api/works", {
       method: "POST",
-      // ajout du token dans le headers
       headers: {
         Authorization: `Bearer ${authToken}`
       },
@@ -496,14 +437,32 @@ form.addEventListener("submit", async (event) => {
         console.log("POST réussi");
 
         // récupération de la réponse de l'API en json -> avec une ligne de type "id": 346,
-        const data = await response.json();
-        addPhotoToGallery(data);
-        addPhotoToModal(data);
+        const dataNewWork = await response.json();
+
+        // ajout de la photo à la gallerie sans rechargement
+        containerWorks.innerHTML += `
+          <figure id="gallery-work-${dataNewWork.id}">
+            <img src="${dataNewWork.imageUrl}" alt="${dataNewWork.title}">
+            <figcaption>${dataNewWork.title}</figcaption>
+          </figure>
+        `;
+        
+        // ajout de la photo à la modale sans rechargement
+        containerWorksModal.innerHTML += `
+          <figure id="modal-work-${dataNewWork.id}">
+            <div class="modal-figure-container">
+              <img src="${dataNewWork.imageUrl}" alt="${dataNewWork.title}">
+              <i class="fa-solid fa-trash-can" id="modal-trash-${dataNewWork.id}"></i>
+              <i class="fa-solid fa-arrows-up-down-left-right"></i>
+              <figcaption>éditer</figcaption>
+            <div>
+          </figure>
+        `;
 
         // message de validation et couleur du bouton
         validationMessage.style.display = "block";
-        greenButton.classList.remove("green-button");
-        greenButton.classList.add("gray-button");
+        greenButtonAddWork.classList.remove("green-button");
+        greenButtonAddWork.classList.add("gray-button");
 
         // réinitialisation des champs
         document.getElementById("title").value = "";
@@ -528,28 +487,50 @@ form.addEventListener("submit", async (event) => {
 }
 })
 
-function addPhotoToGallery (dataWorks) {
-  const figureHTML = `
-  <figure id="gallery-work-${dataWorks.id}">
-      <img src="${dataWorks.imageUrl}" alt="${dataWorks.title}">
-      <figcaption>${dataWorks.title}</figcaption>
-    </figure>
-  `;
 
-  containerWorks.insertAdjacentHTML("beforeend", figureHTML);
-}
+// Suppression de toute la galerie
 
-function addPhotoToModal (dataWorks) {
-  const figureHTML = `
-    <figure id="modal-work-${dataWorks.id}">
-      <div class="modal-figure-container">
-        <img src="${dataWorks.imageUrl}" alt="${dataWorks.title}">
-        <i class="fa-solid fa-trash-can" id="modal-trash-${dataWorks.id}"></i>
-        <i class="fa-solid fa-arrows-up-down-left-right"></i>
-        <figcaption>éditer</figcaption>
-      <div>
-    </figure>
-  `;
+deleteAll.addEventListener("click", async () => {
 
-  containerWorksModal.insertAdjacentHTML("beforeend", figureHTML);
-}
+  if (!authToken) {
+    console.error("Token d'authentification manquant !");
+    return;
+  }
+
+  const urlGetWorks = "http://localhost:5678/api/works";
+  try {
+    const responseWorks = await fetch(urlGetWorks);
+    const dataWorks = await responseWorks.json();
+
+    const urlDelete = "http://localhost:5678/api/works/";
+    for (const work of dataWorks) {
+      const id = work.id;
+      const response = await fetch(urlDelete + id, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${authToken}` },
+      });
+
+      if (!response.ok) {
+        console.error(`Une erreur s'est produite lors de la suppression de l'image avec l'ID ${id}.`);
+      } else {
+        console.log(`L'image avec l'ID ${id} a été supprimée avec succès !`);
+      }
+    }
+
+    console.log("Tous les éléments de la galerie ont été supprimés avec succès !");
+    
+    // Suppression de tous les éléments de la gallery sans recharger la page
+    containerWorks.innerHTML = "";
+    containerWorksModal.innerHTML = "";
+
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+
+    
+
+    
+
+    
