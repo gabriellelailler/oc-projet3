@@ -497,8 +497,8 @@ form.addEventListener("submit", async (event) => {
 
         // récupération de la réponse de l'API en json -> avec une ligne de type "id": 346,
         const data = await response.json();
-        const idToAdd = data.id;
-        console.log("id de l'image ajoutée",idToAdd)
+        addPhotoToGallery(data);
+        addPhotoToModal(data);
 
         // message de validation et couleur du bouton
         validationMessage.style.display = "block";
@@ -516,13 +516,6 @@ form.addEventListener("submit", async (event) => {
         document.getElementById("icon-image").style.display = null;
         document.getElementById("add-picture-button").textContent = "+ Ajouter une photo";
 
-        // Ajout de l'élément de la page principale sans recharger la page
-        const elementToAddToModal = document.getElementById(`gallery-work-${idToAdd}`);
-        containerWorks.appendChild(elementToAddToModal);
-
-        // Ajout de l'élément de la modale sans recharger la page
-        const elementToAddToGallery = document.getElementById(`modal-work-${idToAdd}`);
-        containerWorksModal.appendChild(elementToAddToGallery);
        }
 
       else {
@@ -534,3 +527,29 @@ form.addEventListener("submit", async (event) => {
   }
 }
 })
+
+function addPhotoToGallery (dataWorks) {
+  const figureHTML = `
+  <figure id="gallery-work-${dataWorks.id}">
+      <img src="${dataWorks.imageUrl}" alt="${dataWorks.title}">
+      <figcaption>${dataWorks.title}</figcaption>
+    </figure>
+  `;
+
+  containerWorks.insertAdjacentHTML("beforeend", figureHTML);
+}
+
+function addPhotoToModal (dataWorks) {
+  const figureHTML = `
+    <figure id="modal-work-${dataWorks.id}">
+      <div class="modal-figure-container">
+        <img src="${dataWorks.imageUrl}" alt="${dataWorks.title}">
+        <i class="fa-solid fa-trash-can" id="modal-trash-${dataWorks.id}"></i>
+        <i class="fa-solid fa-arrows-up-down-left-right"></i>
+        <figcaption>éditer</figcaption>
+      <div>
+    </figure>
+  `;
+
+  containerWorksModal.insertAdjacentHTML("beforeend", figureHTML);
+}
