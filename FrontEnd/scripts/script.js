@@ -91,7 +91,7 @@ const getCategories = () => {
                         for (productWorks in dataWorks)
                         if (i === 0) {
                             containerWorks.innerHTML += `
-                            <figure id="work-${dataWorks[productWorks].id}" data-image-id="${dataWorks[productWorks].id}">
+                            <figure id="gallery-work-${dataWorks[productWorks].id}">
                             <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
                             <figcaption>${dataWorks[productWorks].title}</figcaption>
                             </figure>
@@ -99,7 +99,7 @@ const getCategories = () => {
                         } 
                         else if (dataWorks[productWorks].categoryId === i) {
                         containerWorks.innerHTML += `
-                          <figure id="work-${dataWorks[productWorks].id}" data-image-id="${dataWorks[productWorks].id}">
+                          <figure id="gallery-work-${dataWorks[productWorks].id}">
                           <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
                           <figcaption>${dataWorks[productWorks].title}</figcaption>
                           </figure>
@@ -128,7 +128,6 @@ const logoutTab = document.getElementById('logout-tab');
 const editBar = document.getElementById("edit-bar");
 const editButton2 = document.getElementById("edit-button-2");
 let authToken = sessionStorage.getItem("authToken");
-console.log(authToken)
 
 // vérification que l'utilisateur est bien connecté
 window.addEventListener('DOMContentLoaded', function() {
@@ -272,7 +271,7 @@ const getWorksModal = () => {
       console.log(dataWorks);
       for (productWorks in dataWorks) {
           containerWorksModal.innerHTML += `
-          <figure>
+          <figure id="modal-work-${dataWorks[productWorks].id}">
             <div class="modal-figure-container">
               <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
               <i class="fa-solid fa-trash-can" id="modal-trash-${dataWorks[productWorks].id}"></i>
@@ -329,8 +328,7 @@ containerWorksModal.addEventListener("click", (event) => {
       containerWorksModal.removeChild(elementToRemove);
 
       // non fonctionnel
-      const imageIdToRemove = event.target.closest("figure").getAttribute("data-image-id");
-      const elementToRemoveFromGallery = document.getElementById(`work-${imageIdToRemove}`);
+      const elementToRemoveFromGallery = document.getElementById(`gallery-work-${id}`);
       containerWorks.removeChild(elementToRemoveFromGallery);
      
      }
