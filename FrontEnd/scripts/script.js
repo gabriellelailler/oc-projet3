@@ -91,6 +91,7 @@ const getCategories = () => {
         `;
 
         getWorksInitial();
+        getWorksModal();
         
         // Renvoi de l'id de la catégorie au clic
         function addButtonClickListeners() {
@@ -277,10 +278,6 @@ const getWorksModal = async () => {
     console.error(error)
   }
 };
-
-// Execution de getWorksModal
-getWorksModal();
-
 
 // Suppression d'une image depuis la modale
 
