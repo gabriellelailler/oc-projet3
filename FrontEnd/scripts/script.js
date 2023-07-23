@@ -18,7 +18,7 @@ const getWorksInitial = () => {
       console.log(dataWorks);
       for (productWorks in dataWorks) {
           containerWorks.innerHTML += `
-          <figure>
+          <figure id="gallery-work-${dataWorks[productWorks].id}">
           <img src="${dataWorks[productWorks].imageUrl}" alt="${dataWorks[productWorks].title}">
           <figcaption>${dataWorks[productWorks].title}</figcaption>
           </figure>
@@ -323,13 +323,13 @@ containerWorksModal.addEventListener("click", (event) => {
       } else {
       console.log("L'image a été supprimée avec succès !");
       
-      // Suppression de l'élément de la liste sans recharger la page
+      // Suppression de l'élément de la modale sans recharger la page
       const elementToRemove = event.target.closest("figure");
       containerWorksModal.removeChild(elementToRemove);
 
-      // non fonctionnel
+      // Suppression de l'élément de la page principale sans recharger la page
       const elementToRemoveFromGallery = document.getElementById(`gallery-work-${id}`);
-      containerWorks.removeChild(elementToRemoveFromGallery);
+      elementToRemoveFromGallery.remove();
      
      }
     })
@@ -491,8 +491,16 @@ form.addEventListener("submit", async (event) => {
       },
       body: formData,
       });
+
       if (response.ok) {
         console.log("POST réussi");
+
+        // récupération de la réponse de l'API en json -> avec une ligne de type "id": 346,
+        const data = await response.json();
+        const idToAdd = data.id;
+        console.log("id de l'image ajoutée",idToAdd)
+
+        // message de validation et couleur du bouton
         validationMessage.style.display = "block";
         greenButton.classList.remove("green-button");
         greenButton.classList.add("gray-button");
@@ -508,19 +516,21 @@ form.addEventListener("submit", async (event) => {
         document.getElementById("icon-image").style.display = null;
         document.getElementById("add-picture-button").textContent = "+ Ajouter une photo";
 
-        // Suppression de l'élément de la liste sans recharger la page
-        // non fonctionnel
-        const elementToAdd = event.target.closest("figure");
-        containerWorksModal.appendChild(elementToAdd);
-        containerWorks.appendChild(elementToAdd);
+        // Ajout de l'élément de la page principale sans recharger la page
+        const elementToAddToModal = document.getElementById(`gallery-work-${idToAdd}`);
+        containerWorks.appendChild(elementToAddToModal);
 
+        // Ajout de l'élément de la modale sans recharger la page
+        const elementToAddToGallery = document.getElementById(`modal-work-${idToAdd}`);
+        containerWorksModal.appendChild(elementToAddToGallery);
+       }
 
-      } else {
+      else {
         console.log("POST échoué");
       }
     }
-    catch (error) {
-      console.error("Erreur lors de la requête POST : ",error)
-    }
+  catch (error) {
+    console.error("Erreur lors de la requête POST : ",error)
   }
+}
 })
