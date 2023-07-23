@@ -3,7 +3,7 @@
 // Galleries et filtres
 const containerCategories = document.getElementById("categories");
 const containerWorks = document.getElementById("gallery");
-const containerWorksModal = document.getElementById("modal-gallery")
+const containerWorksModal = document.getElementById("modal-gallery");
 
 // Token d'identification
 let authToken = sessionStorage.getItem("authToken");
@@ -18,12 +18,12 @@ const editButton1 = document.getElementById("edit-button-1");
 const editButton2 = document.getElementById("edit-button-2");
 
 // Navigation dans la modale
-const modalXmark = document.getElementById("modal-xmark")
-const modalAddWorkXmark = document.getElementById("modal-add-work-xmark")
-const modal = document.getElementById("modal")
-const modalAddWork = document.getElementById("modal-add-work")
-const modalAddWorkArrowLeft = document.getElementById("modal-add-work-arrow-left")
-const addWork = document.getElementById("add-work") // bouton pour ouvrir la 2e modale
+const modalXmark = document.getElementById("modal-xmark");
+const modalAddWorkXmark = document.getElementById("modal-add-work-xmark");
+const modal = document.getElementById("modal");
+const modalAddWork = document.getElementById("modal-add-work");
+const modalAddWorkArrowLeft = document.getElementById("modal-add-work-arrow-left");
+const addWork = document.getElementById("add-work"); // bouton pour ouvrir la 2e modale
 
 // Variables et constantes du formulaire d'ajout de photos
 const form = document.querySelector("form");
@@ -31,12 +31,13 @@ const form = document.querySelector("form");
 const addPictureInput = document.getElementById("add-picture");
 const previewImage = document.getElementById("preview-image");
 const iconImage = document.getElementById("icon-image");
-const addPictureButton = document.getElementById("add-picture-button")
-const addPictureError = document.getElementById("add-picture-error")
+const addPictureButton = document.getElementById("add-picture-button");
+const addPictureError = document.getElementById("add-picture-error");
+const addPictureTitle = document.getElementById("title");
 
 const formIncomplete = document.getElementById("form-incomplete");
-const errorMessage = document.getElementById("add-work-error-message")
-const validationMessage = document.getElementById("add-work-validation-message")
+const errorMessage = document.getElementById("add-work-error-message");
+const validationMessage = document.getElementById("add-work-validation-message");
 
 const greenButtonAddWork = document.getElementById("modal-add-work-submit");
 
@@ -48,7 +49,7 @@ const deleteAll = document.getElementById("delete-all");
 
 // Fonction d'affichage de la gallerie
 const getWorksInitial = () => {
-  containerWorksModal.innerHTML = "";
+  containerWorks.innerHTML = "";
   fetch("http://localhost:5678/api/works")
     .then(function (responseWorks) {
       return responseWorks.json();
@@ -181,7 +182,6 @@ logoutTab.addEventListener("click", () => {
   window.location.href = "index.html"
 });
 
-
 // Ouverture de la modale
 editButton1.addEventListener("click", () => {
   modal.style.display = null
@@ -286,7 +286,6 @@ containerWorksModal.addEventListener("click", (event) => {
   //Si le click porte sur une ligne avec icone trash-can 
   if (event.target.classList.contains("fa-trash-can")) {
     const id = event.target.id.split("-")[2]; // event.target.id -> "modal-trash-2", event.target.id.split("-") -> ["modal" "trash" "2"], event.target.id.split("-")[2] -> 2
-    let authToken = sessionStorage.getItem('authToken');
     if (!authToken) {
       console.error("Token d'authentification manquant !");
       return;
@@ -323,7 +322,7 @@ containerWorksModal.addEventListener("click", (event) => {
 // Vérification de l'image et title pour couleur bouton et message d'erreur
 
 addPictureInput.addEventListener("input", checkFormValidity);
-document.getElementById("title").addEventListener("input", checkFormValidity);
+addPictureTitle.addEventListener("input", checkFormValidity);
 
 // Fonction de validation du formulaire
 function checkFormValidity() {
@@ -410,17 +409,9 @@ form.addEventListener("submit", async (event) => {
 
   const pictureInput = addPictureInput.files[0]; // Récupération de l'image
 
-  if (!pictureInput) { // Vérification si l'image a bien été sélectionnée
-    errorMessage.style.display = "block"; // affichage du message d'erreur
+  if (!pictureInput || !title || !chiffre) { // si pas d'imagem, pas de categorie ou pas titre
     return; // arrêt de la fonction car pas de fichier
-  }
-
-  if (!title || !chiffre) { //si pas de categorie ou pas titre
-    errorMessage.style.display = "block";
-    return; // arrêt de la fonction
   } else {
-    errorMessage.style.display = "none"; // pas de message d'erreur
-
     // Création d'un objet FormData pour envoyer les données
     const formData = new FormData();
     formData.append("image", pictureInput);
@@ -443,7 +434,7 @@ form.addEventListener("submit", async (event) => {
         // récupération de la réponse de l'API en json -> avec une ligne de type "id": 346,
         const dataNewWork = await response.json();
 
-        // ajout de la photo à la gallerie sans rechargement
+        // ajout de la photo à la galerie sans rechargement
         containerWorks.innerHTML += `
           <figure id="gallery-work-${dataNewWork.id}">
             <img src="${dataNewWork.imageUrl}" alt="${dataNewWork.title}">
@@ -490,7 +481,6 @@ form.addEventListener("submit", async (event) => {
   }
 }
 })
-
 
 // Suppression de toute la galerie
 
