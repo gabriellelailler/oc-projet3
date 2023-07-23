@@ -93,7 +93,8 @@ input[type="submit"]{
 .green-button,
 .gray-button,
 .filter-button,
-.clicked-button {
+.clicked-button,
+#delete-all {
 	font-family: 'Syne';
 	font-weight: 700;
 }
@@ -219,15 +220,18 @@ input[type="submit"]{
 .modal-wrapper,
 .modal-wrapper-add-work{
 	overflow: auto;
-	width: 600px;
-	height: 30%;
-	max-width: calc(100vw - 20px);
-	max-height: calc(690vh - 20px);
-	overflow: auto;
-	border-radius: 10px;
-	margin:20%;
-	padding:8%;
-	position: relative;
+  width: 600px;
+  height: 30%;
+  max-width: calc(100vw - 20px);
+  max-height: calc(100vh - 20px);
+  overflow: auto;
+  border-radius: 10px;
+  position: fixed;
+  top: 50%; /* Centrage vertical */
+  left: 50%; /* Centrage horizontal */
+  transform: translate(-50%, -50%); /* Translate la fenêtre du coin inférieur gauche au centre */
+  padding: 8%;
+  background-color: white;
 }
 #modal-xmark,
 #modal-add-work-xmark{

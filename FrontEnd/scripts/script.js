@@ -1,4 +1,4 @@
-// Variables et constantes générales
+// VARIABLES ET CONSTANTES
 
 // Galleries et filtres
 const containerCategories = document.getElementById("categories");
@@ -42,6 +42,9 @@ const greenButtonAddWork = document.getElementById("modal-add-work-submit");
 
 // Bouton de suppression de toute la gallerie
 const deleteAll = document.getElementById("delete-all");
+
+
+// FONCTIONS
 
 // Fonction d'affichage de la gallerie
 const getWorksInitial = () => {
@@ -249,8 +252,9 @@ modalAddWorkArrowLeft.addEventListener("click", () => {
 });
 
 // Fonction d'affichage des images dans la modale
-const getWorksModal = () => {
-  containerWorksModal.innerHTML = ""
+const getWorksModal = async () => {
+  containerWorksModal.innerHTML = "";
+  try{
   fetch("http://localhost:5678/api/works")
     .then(function (responseWorks) {
       return responseWorks.json();
@@ -269,6 +273,9 @@ const getWorksModal = () => {
           `;
       }
     });
+  } catch(error) {
+    console.error(error)
+  }
 };
 
 // Execution de getWorksModal
