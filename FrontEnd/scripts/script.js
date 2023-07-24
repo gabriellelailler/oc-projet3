@@ -55,7 +55,6 @@ const getWorksInitial = () => {
       return responseWorks.json();
     })
     .then(function (dataWorks) {
-      console.log(dataWorks);
       for (productWorks in dataWorks) {
           containerWorks.innerHTML += `
           <figure id="gallery-work-${dataWorks[productWorks].id}">
@@ -74,7 +73,6 @@ const getCategories = () => {
         return responseCategories.json()
     })
     .then(function(dataCategories) {
-        console.log(dataCategories);
 
         // Ajout du bouton "Tous"
         containerCategories.innerHTML += `
@@ -162,14 +160,12 @@ getCategories();
 // Apparition / Disparition de l'interface d'édition
 window.addEventListener('DOMContentLoaded', function() {
   if (authToken) {
-      console.log('Utilisateur connecté');
       loginTab.style.display = 'none'; // disparition de l'onglet login
       logoutTab.style.display = null; // apparition de l'onglet logout
       editBar.style.display = null; // apparition de l'edit-bar
       editButton2.style.display = null; // apparition du 2e bouton d'édition
 
   } else {
-      console.log('Utilisateur non connecté');
       loginTab.style.display = null;
       logoutTab.style.display = 'none';
       editBar.style.display = 'none';
@@ -299,9 +295,7 @@ containerWorksModal.addEventListener("click", (event) => {
     .then ((response) => {
       if (!response.ok) {
         console.error("Une erreur s'est produite lors de la suppression de l'image.");
-      } else {
-        console.log("L'image a été supprimée avec succès !");
-        
+      } else {        
         // Suppression de l'élément de la modale sans recharger la page
         const elementToRemove = event.target.closest("figure");
         containerWorksModal.removeChild(elementToRemove);
@@ -429,7 +423,6 @@ form.addEventListener("submit", async (event) => {
       });
 
       if (response.ok) {
-        console.log("POST réussi");
 
         // récupération de la réponse de l'API en json -> avec une ligne de type "id": 346,
         const dataNewWork = await response.json();
@@ -473,7 +466,6 @@ form.addEventListener("submit", async (event) => {
        }
 
       else {
-        console.log("POST échoué");
       }
     }
   catch (error) {
@@ -505,13 +497,10 @@ deleteAll.addEventListener("click", async () => {
       });
 
       if (!response.ok) {
-        console.error(`Une erreur s'est produite lors de la suppression de l'image avec l'ID ${id}.`);
       } else {
-        console.log(`L'image avec l'ID ${id} a été supprimée avec succès !`);
       }
     }
 
-    console.log("Tous les éléments de la galerie ont été supprimés avec succès !");
     
     // Suppression de tous les éléments de la gallery sans recharger la page
     containerWorks.innerHTML = "";
