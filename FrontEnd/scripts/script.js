@@ -73,6 +73,10 @@ const getCategories = () => {
         return responseCategories.json()
     })
     .then(function(dataCategories) {
+      if (authToken) {
+        containerCategories.display = 'none'; // disparition des catégories
+  
+    } else {
 
         // Ajout du bouton "Tous"
         containerCategories.innerHTML += `
@@ -88,6 +92,7 @@ const getCategories = () => {
         <button id="buttonCategories${dataCategories[productCategories].id}" class="filter-button">${dataCategories[productCategories].name}</button>
         </div>
         `;
+      }
 
         getWorksInitial();
         getWorksModal();
@@ -164,11 +169,13 @@ window.addEventListener('DOMContentLoaded', function() {
       logoutTab.style.display = null; // apparition de l'onglet logout
       editBar.style.display = null; // apparition de l'edit-bar
       editButton2.style.display = null; // apparition du 2e bouton d'édition
+      containerCategories.display = 'none'; // disparition des catégories
 
   } else {
       loginTab.style.display = null;
       logoutTab.style.display = 'none';
       editBar.style.display = 'none';
+      containerCategories.display = null;
   }
 });
 

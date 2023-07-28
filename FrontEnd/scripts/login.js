@@ -31,10 +31,7 @@ async function authentification () {
             sessionStorage.setItem('authToken', data.token); // Stockage du token dans la sessionStorage
             window.location.href = "index.html"; // Redirection vers la page d'accueil       
         } else { // erreur email ou passwordn
-            if (response.statusText == "Unauthorized") {
-                errorMessage.innerHTML += `Mot de passe incorrect`;
-            }
-            else {errorMessage.innerHTML += `Identifiant incorrect`;}
+            errorMessage.innerHTML += `Identifiant ou Mot de passe incorrect`;
         }
     } catch (error) {
     }
